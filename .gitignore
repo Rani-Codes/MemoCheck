@@ -1,2 +1,15 @@
 Claude.md
 .claude
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+venv/
+.env
+*.env
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dashboard/charts/*.png
+dashboard/data/
