@@ -46,15 +46,11 @@ def extract(
             messages.append(
                 {"role": "assistant", "content": response.choices[0].message.content}
             )
-            messages.append(
-                {
-                    "role": "user",
-                    "content": (
-                        f"Your response failed validation with this error: {first_error}. "
-                        "Please fix it and return valid JSON matching the schema."
-                    ),
-                }
+            error_msg = (
+                f"Your response failed validation: {first_error}. "
+                "Please fix it and return valid JSON matching the schema."
             )
+            messages.append({"role": "user", "content": error_msg})
 
             retry_response = litellm.completion(
                 model=model,

@@ -1,8 +1,10 @@
-import json
 from datetime import date, datetime
+from unittest.mock import MagicMock, patch
 
 import pytest
 
+from memocheck.agent.extractor import extract
+from memocheck.agent.prompts.v0 import SYSTEM_PROMPT as V0_PROMPT
 from memocheck.agent.schema import (
     CalendarEvent,
     Entity,
@@ -63,12 +65,6 @@ def test_extraction_error_stores_raw_response():
     err = ExtractionError(error="ValidationError", raw_response='{"bad": "json"}')
     assert err.error == "ValidationError"
     assert err.raw_response == '{"bad": "json"}'
-
-
-from unittest.mock import MagicMock, patch
-
-from memocheck.agent.extractor import extract
-from memocheck.agent.prompts.v0 import SYSTEM_PROMPT as V0_PROMPT
 
 
 def _mock_litellm_response(content: str) -> MagicMock:
