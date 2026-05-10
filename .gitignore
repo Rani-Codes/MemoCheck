@@ -13,3 +13,4 @@ dashboard/charts/*.png
 dashboard/data/
 CLAUDE.md
 .claude/
+reference/
