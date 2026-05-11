@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import time
 from typing import Union
 
@@ -7,6 +8,13 @@ import litellm
 from pydantic import ValidationError
 
 from memocheck.agent.schema import ExtractedMemo, ExtractionError
+
+
+def _strip_markdown(content: str) -> str:
+    content = content.strip()
+    content = re.sub(r"^```(?:json)?\s*", "", content)
+    content = re.sub(r"\s*```$", "", content)
+    return content.strip()
 
 
 def extract(
@@ -18,7 +26,7 @@ def extract(
     messages = [
         {
             "role": "system",
-            "content": system_prompt.format(current_date=memo_recorded_at),
+            "content": system_prompt.replace("{current_date}", memo_recorded_at),
         },
         {"role": "user", "content": transcript},
     ]
@@ -30,39 +38,36 @@ def extract(
         response = litellm.completion(
             model=model,
             messages=messages,
-            response_format={"type": "json_object"},
             temperature=0,
         )
-        total_cost += litellm.completion_cost(response)
+        total_cost += litellm.completion_cost(response, model=model)
 
         try:
             result = ExtractedMemo.model_validate_json(
-                response.choices[0].message.content
+                _strip_markdown(response.choices[0].message.content)
             )
             latency_ms = int((time.monotonic() - start) * 1000)
             return result, True, latency_ms, total_cost
 
         except ValidationError as first_error:
-            messages.append(
-                {"role": "assistant", "content": response.choices[0].message.content}
-            )
+            cleaned = _strip_markdown(response.choices[0].message.content)
+            messages.append({"role": "assistant", "content": cleaned})
             error_msg = (
                 f"Your response failed validation: {first_error}. "
-                "Please fix it and return valid JSON matching the schema."
+                "Return raw JSON only, no markdown, no extra text."
             )
             messages.append({"role": "user", "content": error_msg})
 
             retry_response = litellm.completion(
                 model=model,
                 messages=messages,
-                response_format={"type": "json_object"},
                 temperature=0,
             )
             total_cost += litellm.completion_cost(retry_response)
 
             try:
                 result = ExtractedMemo.model_validate_json(
-                    retry_response.choices[0].message.content
+                    _strip_markdown(retry_response.choices[0].message.content)
                 )
                 latency_ms = int((time.monotonic() - start) * 1000)
                 return result, False, latency_ms, total_cost
