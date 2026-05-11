@@ -2,11 +2,11 @@
 Run: python scripts/smoke_test.py
 Requires all four API keys set in .env
 """
-import os
 from dotenv import load_dotenv
+
 from memocheck.agent.extractor import extract
 from memocheck.agent.prompts.v0 import SYSTEM_PROMPT
-from memocheck.agent.schema import ExtractedMemo
+from memocheck.agent.schema import ExtractedMemo, ExtractionError
 
 load_dotenv()
 
@@ -28,6 +28,9 @@ for model in PROVIDERS:
         system_prompt=SYSTEM_PROMPT,
     )
     status = "OK" if isinstance(result, ExtractedMemo) else "FAIL"
-    print(f"{model}: {status} | schema_valid={schema_valid} | {latency_ms}ms | ${cost_usd:.6f}")
+    cost = f"${cost_usd:.6f}"
+    print(f"{model}: {status} | schema_valid={schema_valid} | {latency_ms}ms | {cost}")
     if isinstance(result, ExtractedMemo):
         print(f"  reminders: {[r.description for r in result.reminders]}")
+    elif isinstance(result, ExtractionError):
+        print(f"  error: {result.error[:200]}")
