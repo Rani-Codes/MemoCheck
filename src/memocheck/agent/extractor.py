@@ -30,7 +30,7 @@ def extract(
         response = litellm.completion(
             model=model,
             messages=messages,
-            response_format=ExtractedMemo,
+            response_format={"type": "json_object"},
             temperature=0,
         )
         total_cost += litellm.completion_cost(response)
@@ -55,7 +55,7 @@ def extract(
             retry_response = litellm.completion(
                 model=model,
                 messages=messages,
-                response_format=ExtractedMemo,
+                response_format={"type": "json_object"},
                 temperature=0,
             )
             total_cost += litellm.completion_cost(retry_response)
