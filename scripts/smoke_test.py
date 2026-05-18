@@ -10,7 +10,7 @@ from memocheck.agent.schema import ExtractedMemo, ExtractionError
 
 load_dotenv()
 
-TRANSCRIPT = "Remind me to pick up dry cleaning on Thursday and call mom this weekend."
+TRANSCRIPT = "Remind me to pick up dry cleaning on Thursday and call mom this weekend. Actually, never mind about the dry cleaning."
 RECORDED_AT = "2026-05-09T10:00:00Z"
 
 PROVIDERS = [

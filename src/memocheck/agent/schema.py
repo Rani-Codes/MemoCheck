@@ -10,6 +10,7 @@ class TodoItem(BaseModel):
     description: str
     due_date: Optional[date] = None
     assignee: Optional[str] = None
+    negated: bool = False
 
 
 class CalendarEvent(BaseModel):
@@ -18,11 +19,13 @@ class CalendarEvent(BaseModel):
     duration_minutes: Optional[int] = None
     location: Optional[str] = None
     attendees: list[str] = []
+    negated: bool = False
 
 
 class Reminder(BaseModel):
     description: str
     remind_at: Optional[datetime] = None
+    negated: bool = False
 
 
 class Entity(BaseModel):
