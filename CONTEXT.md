@@ -13,7 +13,7 @@ The text produced by transcribing a Memo. This is what the agent receives as inp
 _Avoid_: memo text, raw text, audio transcript
 
 **ExtractedMemo**:
-The structured JSON output produced by the agent from a Transcript. Contains todos, events, reminders, notes, and entities.
+The structured JSON output produced by the agent from a Transcript. Contains todos, events, reminders, and notes.
 _Avoid_: structured output, parsed memo, intent, result
 
 **TodoItem**:
@@ -32,7 +32,7 @@ _Avoid_: meeting, appointment, event (too generic)
 
 - A **Memo** is transcribed into exactly one **Transcript**
 - A **Transcript** is processed by the agent into exactly one **ExtractedMemo**
-- An **ExtractedMemo** contains zero or more **TodoItems**, **Reminders**, and **CalendarEvents**
+- An **ExtractedMemo** contains zero or more **TodoItems**, **Reminders**, **CalendarEvents**, and **notes** (free-text observations with no actionable intent. Kept as a pressure valve so the LLM has somewhere to put genuinely non-actionable content rather than forcing it into a todo or reminder)
 - A **TodoItem** deadline is a datetime; if only a date is mentioned, default to 11:59pm that day
 - A **Reminder** has either a date (all-day) or datetime (time-specific) -- both are valid
 - A **CalendarEvent** always has a fixed start datetime; a TodoItem never does

@@ -16,6 +16,9 @@ cp .env.example .env  # add your API keys
 docker compose up -d  # start Postgres
 ```
 
+## Design Decisions
+- **Why there's a `notes` field:** The output schema includes a `notes` field for non-actionable observations ("the coffee on 5th was great"). Without it, the LLM has nowhere to put genuinely irrelevant content and tends to invent todos or reminders that don't belong there. Notes act as a pressure valve that keeps the actionable fields clean.
+
 ## What I Learned
 - **`pip install -e .` (editable install):** links the package to your local `src/` so code changes reflect immediately without reinstalling. Use this during development. Use `pip install .` (no `-e`) when you want a static install, like in a Docker image or CI.
 
