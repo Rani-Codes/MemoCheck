@@ -63,7 +63,7 @@ def extract(
                 messages=messages,
                 temperature=0,
             )
-            total_cost += litellm.completion_cost(retry_response)
+            total_cost += litellm.completion_cost(retry_response, model=model)
 
             try:
                 result = ExtractedMemo.model_validate_json(
@@ -86,4 +86,12 @@ def extract(
 
     except Exception as exc:
         latency_ms = int((time.monotonic() - start) * 1000)
-        return ExtractionError(error=str(exc), raw_response=""), False, latency_ms, 0.0
+        return (
+            ExtractionError(
+                error=f"{type(exc).__name__}: {exc}",
+                raw_response="",
+            ),
+            False,
+            latency_ms,
+            total_cost,
+        )
