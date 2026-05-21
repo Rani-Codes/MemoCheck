@@ -10,12 +10,6 @@ from pydantic import ValidationError
 from memocheck.agent.schema import ExtractedMemo, ExtractionError
 
 
-def _filter_negated(result: ExtractedMemo) -> None:
-    result.todos = [t for t in result.todos if not t.negated]
-    result.events = [e for e in result.events if not e.negated]
-    result.reminders = [r for r in result.reminders if not r.negated]
-
-
 def _strip_markdown(content: str) -> str:
     content = content.strip()
     content = re.sub(r"^```(?:json)?\s*", "", content)
@@ -52,7 +46,6 @@ def extract(
             result = ExtractedMemo.model_validate_json(
                 _strip_markdown(response.choices[0].message.content)
             )
-            _filter_negated(result)
             latency_ms = int((time.monotonic() - start) * 1000)
             return result, True, latency_ms, total_cost
 
@@ -76,7 +69,6 @@ def extract(
                 result = ExtractedMemo.model_validate_json(
                     _strip_markdown(retry_response.choices[0].message.content)
                 )
-                _filter_negated(result)
                 latency_ms = int((time.monotonic() - start) * 1000)
                 return result, False, latency_ms, total_cost
 
