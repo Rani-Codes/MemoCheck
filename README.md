@@ -34,8 +34,19 @@ This new matching design also surfaced something I'd missed. I had been planning
 
 Bigger picture: The whole point of evals is to drive decisions for better agent creation. The numbers aren't the point, the iterations they unlock are.
 
+**On the small-N concern:** I deliberately chose depth over breadth. ~30 hand-labeled cases targeting specific known failure modes (vague dates, negation, disfluencies) gives a sharper diagnostic signal than hundreds of shallow cases. Stripe's recent agentic benchmark used 11 hard tasks for the same reason, which is good external precedent for the deterministic-graders-plus-hard-tasks approach I adopted ([Stripe Engineering blog](https://stripe.com/blog/can-ai-agents-build-real-stripe-integrations)).
+
+## Failure modes
+
+Aggregate metrics tell you whether v1 improved on v0, but they don't tell you why. This section names 3-5 specific failure patterns observed in v0, each with the real transcript, the real agent output (captured via `raw_response`), and a one-sentence diagnosis. These examples are what drive v1 prompt iteration directly, and they make the writeup concrete instead of just statistical.
+
+> *Examples will be populated after the v0 evaluation run completes. Each entry follows this format:*
+
+### [Failure mode name]
+- **Transcript:** ...
+- **Agent output:** ...
+- **Diagnosis:** ...
+
 ## Engineering Notes
 - **`pip install -e .` (editable install):** links the package to your local `src/` so code changes reflect immediately without reinstalling. Use this during development. Use `pip install .` (no `-e`) when you want a static install, like in a Docker image or CI.
 - If you're using a virtual environment, make sure VS Code's Python interpreter is pointing to that venv (Cmd+Shift+P > "Python: Select Interpreter").
-
-The whole point of these evals is to drive decisions for better agent creation. 
