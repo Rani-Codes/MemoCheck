@@ -1,8 +1,6 @@
 from datetime import datetime
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from memocheck.agent.extractor import extract
 from memocheck.agent.prompts.v0 import SYSTEM_PROMPT as V0_PROMPT
 from memocheck.agent.schema import (
@@ -40,7 +38,9 @@ def test_calendar_event_attendees_defaults_to_empty():
 
 def test_extracted_memo_round_trips_json():
     memo = ExtractedMemo(
-        todos=[TodoItem(description="Call dentist", due_date=datetime(2026, 5, 15, 23, 59))],
+        todos=[
+            TodoItem(description="Call dentist", due_date=datetime(2026, 5, 15, 23, 59))
+        ],
         reminders=[Reminder(description="Pick up dry cleaning")],
         notes=["General note here"],
     )

@@ -67,7 +67,8 @@ class GroundTruthCalendarEvent(BaseModel):
     def start_must_be_specified(self) -> "GroundTruthCalendarEvent":
         if self.start_datetime is None and self.start_datetime_window is None:
             raise ValueError(
-                "GroundTruthCalendarEvent must specify start_datetime or start_datetime_window"
+                "GroundTruthCalendarEvent must specify "
+                "start_datetime or start_datetime_window"
             )
         if self.start_datetime is not None and self.start_datetime_window is not None:
             raise ValueError(
@@ -87,7 +88,8 @@ class GroundTruthReminder(BaseModel):
     def date_fields_mutually_exclusive(self) -> "GroundTruthReminder":
         if self.remind_at is not None and self.remind_at_window is not None:
             raise ValueError(
-                "GroundTruthReminder must set at most one of remind_at / remind_at_window"
+                "GroundTruthReminder must set at most one of "
+                "remind_at / remind_at_window"
             )
         return self
 
