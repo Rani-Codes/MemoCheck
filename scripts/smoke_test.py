@@ -21,16 +21,19 @@ PROVIDERS = [
 ]
 
 for model in PROVIDERS:
-    result, schema_valid, latency_ms, cost_usd = extract(
+    result = extract(
         transcript=TRANSCRIPT,
         memo_recorded_at=RECORDED_AT,
         model=model,
         system_prompt=SYSTEM_PROMPT,
     )
-    status = "OK" if isinstance(result, ExtractedMemo) else "FAIL"
-    cost = f"${cost_usd:.6f}"
-    print(f"{model}: {status} | schema_valid={schema_valid} | {latency_ms}ms | {cost}")
-    if isinstance(result, ExtractedMemo):
-        print(f"  reminders: {[r.description for r in result.reminders]}")
-    elif isinstance(result, ExtractionError):
-        print(f"  error: {result.error[:200]}")
+    status = "OK" if isinstance(result.output, ExtractedMemo) else "FAIL"
+    cost = f"${result.cost_usd:.6f}"
+    print(
+        f"{model}: {status} | schema_valid={result.schema_valid} "
+        f"| {result.latency_ms}ms | {cost}"
+    )
+    if isinstance(result.output, ExtractedMemo):
+        print(f"  reminders: {[r.description for r in result.output.reminders]}")
+    elif isinstance(result.output, ExtractionError):
+        print(f"  error: {result.output.error[:200]}")

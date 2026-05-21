@@ -50,10 +50,9 @@ def test_extracted_memo_round_trips_json():
     assert restored.todos[0].due_date == datetime(2026, 5, 15, 23, 59)
 
 
-def test_extraction_error_stores_raw_response():
-    err = ExtractionError(error="ValidationError", raw_response='{"bad": "json"}')
+def test_extraction_error_stores_message():
+    err = ExtractionError(error="ValidationError")
     assert err.error == "ValidationError"
-    assert err.raw_response == '{"bad": "json"}'
 
 
 def _mock_litellm_response(content: str) -> MagicMock:
@@ -73,17 +72,18 @@ def test_extract_returns_extracted_memo_on_valid_response():
          patch("memocheck.agent.extractor.litellm.completion_cost", return_value=0.001):
         mock_completion.return_value = _mock_litellm_response(valid_json)
 
-        result, schema_valid, latency_ms, cost_usd = extract(
+        result = extract(
             transcript="Remind me to call the dentist.",
             memo_recorded_at="2026-05-08T09:00:00Z",
             model="openai/gpt-4.1-mini",
             system_prompt=V0_PROMPT,
         )
 
-    assert isinstance(result, ExtractedMemo)
-    assert schema_valid is True
-    assert latency_ms >= 0
-    assert cost_usd == 0.001
+    assert isinstance(result.output, ExtractedMemo)
+    assert result.schema_valid is True
+    assert result.latency_ms >= 0
+    assert result.cost_usd == 0.001
+    assert result.raw_response == valid_json
 
 
 def test_extract_retries_on_validation_error_and_succeeds():
@@ -97,16 +97,17 @@ def test_extract_retries_on_validation_error_and_succeeds():
             _mock_litellm_response(valid_json),
         ]
 
-        result, schema_valid, latency_ms, cost_usd = extract(
+        result = extract(
             transcript="Nothing actionable here.",
             memo_recorded_at="2026-05-08T09:00:00Z",
             model="openai/gpt-4.1-mini",
             system_prompt=V0_PROMPT,
         )
 
-    assert isinstance(result, ExtractedMemo)
-    assert schema_valid is False
+    assert isinstance(result.output, ExtractedMemo)
+    assert result.schema_valid is False
     assert mock_completion.call_count == 2
+    assert result.raw_response == valid_json
 
 
 def test_extract_returns_extraction_error_after_two_failures():
@@ -116,13 +117,14 @@ def test_extract_returns_extraction_error_after_two_failures():
          patch("memocheck.agent.extractor.litellm.completion_cost", return_value=0.001):
         mock_completion.return_value = _mock_litellm_response(bad_json)
 
-        result, schema_valid, latency_ms, cost_usd = extract(
+        result = extract(
             transcript="Nothing actionable here.",
             memo_recorded_at="2026-05-08T09:00:00Z",
             model="openai/gpt-4.1-mini",
             system_prompt=V0_PROMPT,
         )
 
-    assert isinstance(result, ExtractionError)
-    assert schema_valid is False
+    assert isinstance(result.output, ExtractionError)
+    assert result.schema_valid is False
     assert mock_completion.call_count == 2
+    assert result.raw_response == bad_json

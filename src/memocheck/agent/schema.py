@@ -37,4 +37,15 @@ class ExtractedMemo(BaseModel):
 
 class ExtractionError(BaseModel):
     error: str
+
+
+class ExtractionResult(BaseModel):
+    """Full return type of `extract()`. Carries both the parsed output and the
+    raw LLM text, so eval / debugging can inspect what the model literally said
+    before parsing."""
+
+    output: ExtractedMemo | ExtractionError
+    schema_valid: bool
+    latency_ms: int
+    cost_usd: float
     raw_response: str

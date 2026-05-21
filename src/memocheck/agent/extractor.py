@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import re
 import time
-from typing import Union
 
 import litellm
 from pydantic import ValidationError
 
-from memocheck.agent.schema import ExtractedMemo, ExtractionError
+from memocheck.agent.schema import (
+    ExtractedMemo,
+    ExtractionError,
+    ExtractionResult,
+)
 
 
 def _strip_markdown(content: str) -> str:
@@ -22,7 +25,7 @@ def extract(
     memo_recorded_at: str,
     model: str,
     system_prompt: str,
-) -> tuple[Union[ExtractedMemo, ExtractionError], bool, int, float]:
+) -> ExtractionResult:
     messages = [
         {
             "role": "system",
@@ -33,6 +36,7 @@ def extract(
 
     start = time.monotonic()
     total_cost = 0.0
+    raw_response = ""
 
     try:
         response = litellm.completion(
@@ -41,17 +45,23 @@ def extract(
             temperature=0,
         )
         total_cost += litellm.completion_cost(response, model=model)
+        raw_response = response.choices[0].message.content
 
         try:
-            result = ExtractedMemo.model_validate_json(
-                _strip_markdown(response.choices[0].message.content)
-            )
+            result = ExtractedMemo.model_validate_json(_strip_markdown(raw_response))
             latency_ms = int((time.monotonic() - start) * 1000)
-            return result, True, latency_ms, total_cost
+            return ExtractionResult(
+                output=result,
+                schema_valid=True,
+                latency_ms=latency_ms,
+                cost_usd=total_cost,
+                raw_response=raw_response,
+            )
 
         except ValidationError as first_error:
-            cleaned = _strip_markdown(response.choices[0].message.content)
-            messages.append({"role": "assistant", "content": cleaned})
+            messages.append(
+                {"role": "assistant", "content": _strip_markdown(raw_response)}
+            )
             error_msg = (
                 f"Your response failed validation: {first_error}. "
                 "Return raw JSON only, no markdown, no extra text."
@@ -64,34 +74,37 @@ def extract(
                 temperature=0,
             )
             total_cost += litellm.completion_cost(retry_response, model=model)
+            raw_response = retry_response.choices[0].message.content
 
             try:
                 result = ExtractedMemo.model_validate_json(
-                    _strip_markdown(retry_response.choices[0].message.content)
+                    _strip_markdown(raw_response)
                 )
                 latency_ms = int((time.monotonic() - start) * 1000)
-                return result, False, latency_ms, total_cost
+                return ExtractionResult(
+                    output=result,
+                    schema_valid=False,
+                    latency_ms=latency_ms,
+                    cost_usd=total_cost,
+                    raw_response=raw_response,
+                )
 
             except ValidationError as second_error:
                 latency_ms = int((time.monotonic() - start) * 1000)
-                return (
-                    ExtractionError(
-                        error=str(second_error),
-                        raw_response=retry_response.choices[0].message.content,
-                    ),
-                    False,
-                    latency_ms,
-                    total_cost,
+                return ExtractionResult(
+                    output=ExtractionError(error=str(second_error)),
+                    schema_valid=False,
+                    latency_ms=latency_ms,
+                    cost_usd=total_cost,
+                    raw_response=raw_response,
                 )
 
     except Exception as exc:
         latency_ms = int((time.monotonic() - start) * 1000)
-        return (
-            ExtractionError(
-                error=f"{type(exc).__name__}: {exc}",
-                raw_response="",
-            ),
-            False,
-            latency_ms,
-            total_cost,
+        return ExtractionResult(
+            output=ExtractionError(error=f"{type(exc).__name__}: {exc}"),
+            schema_valid=False,
+            latency_ms=latency_ms,
+            cost_usd=total_cost,
+            raw_response=raw_response,
         )
