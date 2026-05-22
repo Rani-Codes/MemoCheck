@@ -17,7 +17,7 @@ The structured JSON output produced by the agent from a Transcript. Contains tod
 _Avoid_: structured output, parsed memo, intent, result
 
 **TodoItem**:
-An internal action the user needs to complete. User controls when it happens. Has an optional date-level deadline -- not a specific time.
+An internal action the user needs to complete. User controls when it happens. Has an optional datetime deadline (`due_date`). The field always stores a full datetime; if the user only mentions a date ("by Friday"), the time defaults to 11:59pm (end of day) of that date.
 _Avoid_: task, action item, reminder
 
 **Reminder**:
@@ -33,7 +33,7 @@ _Avoid_: meeting, appointment, event (too generic)
 - A **Memo** is transcribed into exactly one **Transcript**
 - A **Transcript** is processed by the agent into exactly one **ExtractedMemo**
 - An **ExtractedMemo** contains zero or more **TodoItems**, **Reminders**, **CalendarEvents**, and **notes** (free-text observations with no actionable intent. Kept as a pressure valve so the LLM has somewhere to put genuinely non-actionable content rather than forcing it into a todo or reminder)
-- A **TodoItem** deadline is a datetime; if only a date is mentioned, default to 11:59pm that day
+- A **TodoItem** deadline (`due_date`) is always a `datetime`; if the transcript only mentions a date, the time defaults to 11:59pm that day
 - A **Reminder** has either a date (all-day) or datetime (time-specific) -- both are valid
 - A **CalendarEvent** always has a fixed start datetime; a TodoItem never does
 
