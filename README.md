@@ -17,7 +17,11 @@ docker compose up -d  # start Postgres
 ```
 
 ## Design Decisions
-- **Why there's a `notes` field:** The output schema includes a `notes` field for non-actionable observations ("the coffee on 5th was great"). Without it, the LLM has nowhere to put genuinely irrelevant content and tends to invent todos or reminders that don't belong there. Notes act as a pressure valve that keeps the actionable fields clean.
+- **Purpose of notes:** The whole reason the field exists is that without it, models invent fake action items for non-actionable content because the schema forces every observation to land somewhere typed.
+    - Avoids hallucinations and creating action items that don't exist.
+    - Avoids the content getting dropped and having data loss.
+    - Con: Agent might put real tasks in the notes field, but this is fine because our evals catch it.
+        - If an agent puts a real todo into notes instead of todo, the matcher has no agent-side todo to pair with the ground-truth todo, so Detection Rate drops.
 
 ## Architectural and methodology decisions
 - These are recorded as ADRs (Architecture Decision Record) in [`docs/adr/`](./docs/adr/).
