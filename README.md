@@ -51,6 +51,17 @@ Aggregate metrics tell you whether v1 improved on v0, but they don't tell you wh
 - **Agent output:** ...
 - **Diagnosis:** ...
 
+## Limitations
+
+Honest caveats on what this study does and doesn't measure.
+
+- **v0 prompt and labeling guide were co-designed.** The labeling rules in [`docs/labeling-guide.md`](./docs/labeling-guide.md) and the v0 system prompt were written together, after the 22 transcript topics were chosen. v0 is therefore not a blind baseline; it knows the schema conventions the test set uses. The v0 → v1 delta is still meaningful (both versions sit on the same rule baseline), but absolute v0 scores should not be read as "what an off-the-shelf agent would do on novel data." A future iteration would write the prompt without sight of the test set.
+- **Small N.** 24 visible + 6 held-out test cases. Per-metric 95% bootstrap CIs (per [ADR-005](./docs/adr/005-bootstrap-confidence-intervals.md)) will be wide, especially on the held-out split. A held-out CI that straddles zero is not on its own evidence of failure to generalize.
+- **English only, single speaker.** All self-recorded transcripts come from one person, in similar acoustic environments, in English. Accent robustness, multilingual extraction, and noisy-background performance are out of scope.
+- **Single labeler.** Inter-annotator agreement is not measured. A second labeler might reasonably disagree on borderline cases (vague-time bounds, Reminder vs Todo on ambiguous utterances).
+- **Audio is not in the public repo.** Out of privacy and size considerations. The canonical artifact is the JSON ground truth in `data/transcripts/`; the recording-side methodology lives in [`docs/labeling-guide.md`](./docs/labeling-guide.md). Bit-for-bit reproduction requires re-recording from the methodology.
+- **Provider snapshot, not provider capability.** All scores are conditional on the specific model versions used at run time. Provider behavior drifts; results six months from now would differ even with identical code.
+
 ## Engineering Notes
 - **`pip install -e .` (editable install):** links the package to your local `src/` so code changes reflect immediately without reinstalling. Use this during development. Use `pip install .` (no `-e`) when you want a static install, like in a Docker image or CI.
 - If you're using a virtual environment, make sure VS Code's Python interpreter is pointing to that venv (Cmd+Shift+P > "Python: Select Interpreter").
