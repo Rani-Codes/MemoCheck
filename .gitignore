@@ -14,5 +14,6 @@ dashboard/data/
 CLAUDE.md
 .claude/
 reference/
+/data/audio
 .agents
 skills-lock.json
