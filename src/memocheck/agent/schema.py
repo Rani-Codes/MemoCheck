@@ -45,6 +45,10 @@ class ExtractionResult(BaseModel):
     before parsing."""
 
     output: ExtractedMemo | ExtractionError
+    # True iff the FIRST LLM attempt produced JSON that passed strict Pydantic
+    # validation. Validation that only passes after the once-allowed retry must
+    # set this to False -- the Schema Adherence metric (see CLAUDE.md) measures
+    # first-attempt validity, not best-of-N.
     schema_valid: bool
     latency_ms: int
     cost_usd: float
