@@ -2,12 +2,18 @@
 Transcribe audio files to text using mlx-whisper (local, Apple Silicon).
 
 Usage:
-    python scripts/transcribe.py audio/memo_001.m4a
-    python scripts/transcribe.py audio/
-    python scripts/transcribe.py audio/ --model small
-    
-    # To use the highest quality model (requires ~4-6GB RAM):
-    python scripts/transcribe.py audio/ --model large
+    python scripts/transcribe.py data/audio/memo_001.m4a
+    python scripts/transcribe.py data/audio/
+    python scripts/transcribe.py data/audio/ --model small
+
+    # Highest quality (requires ~4-6GB RAM):
+    python scripts/transcribe.py data/audio/ --model large
+
+    # Override output directory:
+    python scripts/transcribe.py data/audio/ --output-dir some/other/dir
+
+Output:
+    Transcripts are written to data/transcripts/<stem>.txt by default.
 """
 import argparse
 from pathlib import Path
@@ -27,9 +33,10 @@ MODEL_REPOS = {
     "base": "mlx-community/whisper-base-mlx",
     "small": "mlx-community/whisper-small-mlx",
     "medium": "mlx-community/whisper-medium-mlx",
-    "large": "mlx-community/whisper-large-v3-mlx", 
+    "large": "mlx-community/whisper-large-v3-mlx",
 }
 DEFAULT_MODEL = "base"
+DEFAULT_OUTPUT_DIR = Path("data/transcripts")
 
 
 def transcribe_file(audio_path: Path, model_repo: str) -> str:
@@ -46,10 +53,18 @@ def main() -> None:
         default=DEFAULT_MODEL,
         help=f"Whisper model size (default: {DEFAULT_MODEL})",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help=f"Directory to write .txt transcripts to (default: {DEFAULT_OUTPUT_DIR})",
+    )
     args = parser.parse_args()
 
     target = Path(args.target)
     model_repo = MODEL_REPOS[args.model]
+    output_dir = args.output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     if target.is_file():
         paths = [target]
@@ -60,10 +75,11 @@ def main() -> None:
         raise SystemExit(1)
 
     print(f"Using model: {model_repo}")
+    print(f"Writing transcripts to: {output_dir}")
     for audio_path in paths:
         print(f"Transcribing {audio_path.name}...")
         transcript = transcribe_file(audio_path, model_repo)
-        out_path = audio_path.with_suffix(".txt")
+        out_path = output_dir / f"{audio_path.stem}.txt"
         out_path.write_text(transcript)
         print(f"  Saved to {out_path}")
         print(f"  Transcript: {transcript[:80]}...")
