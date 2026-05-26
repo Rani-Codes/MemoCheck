@@ -12,7 +12,34 @@ When two documents conflict, this guide wins for *labeling decisions*. CLAUDE.md
 
 ---
 
-## 1. Type classification (Todo vs Reminder vs CalendarEvent)
+## 1. ASR error correction (do this before labeling)
+
+The transcript produced by `scripts/transcribe.py` is the input the agent will see. Lightly fix transcription errors that would confound the eval, but preserve realistic noise.
+
+| Pattern | Action |
+|---|---|
+| Missing function words that change the parse ("Ask Rachel she can cover" → "Ask Rachel **if** she can cover") | **Fix** in the `.txt` |
+| Proper nouns misheard when they're the action's anchor ("Mulgreens" → "Walgreens"; "Sara" → "Sarah") | **Fix** |
+| Numbers / times / weekdays misheard ("20" → "2:30", "Tuesday" → "Thursday") | **Fix always** -- these drive Tier 3 (Date Accuracy) |
+| Filler words ("uh", "okay so", "let me think") | **Leave as-is** -- realistic noise we want to test against |
+| Restarts, run-on sentences, missing punctuation | **Leave as-is** -- same |
+| Misheard proper noun that's only incidental (a person mentioned in passing, not the assignee or recipient) | Prefer leave -- fix only if it would confuse the labeler |
+
+### Why this rule
+
+MemoCheck benchmarks the LLM's *intent-extraction* layer, not its ability to repair mangled ASR output. If half the cases have garbled words, the metrics conflate two unrelated failure modes (transcription + extraction) and the v0 → v1 story becomes harder to read. Surface noise (fillers, restarts) is real production noise the agent should handle; word-level transcription errors that destroy parseable meaning are not part of the task we are measuring.
+
+### Workflow
+
+1. Run `scripts/transcribe.py data/audio/` → produces `data/transcripts/memo_NNN.txt`.
+2. Read the `.txt` alongside playing back the `.m4a`. Apply the table above; edit the `.txt` in place. Edits should be minimal.
+3. Copy the corrected text into the `transcript` field of `data/transcripts/memo_NNN.json` and proceed with the rest of this guide.
+
+The `.txt` file is the editable stepping-stone. The `.json` is the canonical artifact the eval reads.
+
+---
+
+## 2. Type classification (Todo vs Reminder vs CalendarEvent)
 
 Classify by **underlying intent**, not by phrasing.
 
@@ -43,7 +70,7 @@ This avoids rewarding the agent for confident hallucination.
 
 ---
 
-## 2. Assignee semantics
+## 3. Assignee semantics
 
 `TodoItem.assignee` is the person who **performs** the action, not whoever is mentioned in the description.
 
@@ -60,7 +87,7 @@ When in doubt: ask "who actually performs this action?" That person is the assig
 
 ---
 
-## 3. Date encoding
+## 4. Date encoding
 
 Two forms exist for each date field on every ground-truth model:
 
@@ -93,7 +120,7 @@ If the resolved date is in the past relative to `memo_recorded_at`, advance to t
 
 ---
 
-## 4. Vague time-of-day → window
+## 5. Vague time-of-day → window
 
 Anchored to `memo_recorded_at`'s local day. For relative-day phrases ("tomorrow morning"), apply the day offset first, then the window.
 
@@ -114,7 +141,7 @@ If a phrase isn't on this table, encode as the full day window (`{start: that da
 
 ---
 
-## 5. Vague relative-date → window
+## 6. Vague relative-date → window
 
 Anchored to `memo_recorded_at`.
 
@@ -131,7 +158,7 @@ Anchored to `memo_recorded_at`.
 
 ---
 
-## 6. "Before" vs "by"
+## 7. "Before" vs "by"
 
 | Phrase | Encoding |
 |---|---|
@@ -144,7 +171,7 @@ Example: "before Friday" → `{end: Thursday 23:59}`. "By Friday" → `{end: Fri
 
 ---
 
-## 7. Multi-item / shopping list pattern
+## 8. Multi-item / shopping list pattern
 
 A single breath listing multiple items of the same kind ("eggs, milk, sourdough, the good olive oil") collapses to **one TodoItem** with the items in the description, not N separate todos. Example:
 
@@ -157,7 +184,7 @@ A separate errand in the same memo is its own Todo. Use the "same trip / same ac
 
 ---
 
-## 8. Negation handling
+## 9. Negation handling
 
 The `negated` flag captures explicit retractions of items the speaker mentioned.
 
@@ -170,7 +197,7 @@ The `negated` flag captures explicit retractions of items the speaker mentioned.
 
 - The speaker corrects a value mid-sentence ("3, no wait, 3:30 on Thursday"). Produce only the corrected value. No `negated = true`.
 - The speaker emphasizes a positive ("don't want to forget", "don't be late"). The word "don't" appears but the intent is not retraction.
-- The speaker hedges with uncertainty ("maybe", "I think"). Uncertainty is not negation. (See §1 edge case on uncertain events.)
+- The speaker hedges with uncertainty ("maybe", "I think"). Uncertainty is not negation. (See §2 edge case on uncertain events.)
 
 ### Two error directions tracked by the metric
 
@@ -181,7 +208,7 @@ Both directions are reported separately in the leaderboard.
 
 ---
 
-## 9. Notes (the `notes: list[str]` field)
+## 10. Notes (the `notes: list[str]` field)
 
 `notes` is a pressure valve for content that is genuinely non-actionable and does not fit a Todo / Reminder / CalendarEvent. The `notes` field is **not graded** by any metric (see CLAUDE.md > Metrics > "Not scored"), but it is inspected qualitatively. Label it honestly anyway -- the agent's note-routing behavior is examined during failure-mode analysis.
 
@@ -194,7 +221,7 @@ Do **not** route real actions into `notes` to dodge type classification -- if it
 
 ---
 
-## 10. Timezone and `memo_recorded_at`
+## 11. Timezone and `memo_recorded_at`
 
 - All datetimes in ground truth are UTC by convention, anchored to `memo_recorded_at`.
 - `memo_recorded_at` itself is a single UTC datetime captured at recording time (the timestamp on the audio file is the source of truth).
@@ -203,7 +230,7 @@ Do **not** route real actions into `notes` to dodge type classification -- if it
 
 ---
 
-## 11. CalendarEvent specifics
+## 12. CalendarEvent specifics
 
 - `start_datetime` (agent) is always a single datetime. `start_datetime_window` (ground truth only) is allowed for vague references; the agent's committed datetime must fall inside the window.
 - `duration_minutes` is optional; only set it if the speaker explicitly mentioned a duration ("the meeting is 30 minutes long"). Do not infer from context.
@@ -212,7 +239,7 @@ Do **not** route real actions into `notes` to dodge type classification -- if it
 
 ---
 
-## 12. Sanity checklist before saving a case
+## 13. Sanity checklist before saving a case
 
 1. The JSON validates against `TestCase` in `src/memocheck/evals/schema.py`.
 2. `memo_recorded_at` is a UTC datetime with explicit `Z` suffix.
@@ -223,10 +250,10 @@ Do **not** route real actions into `notes` to dodge type classification -- if it
 7. No real actions are hiding in `notes`.
 8. The `category` field tags the dominant feature you wanted this case to test.
 9. Numeric references like "the 18th" resolved to the correct month per `memo_recorded_at`.
-10. Any vague-time phrase not on the §4 table has a `# TODO labeler:` comment so we extend the table later.
+10. Any vague-time phrase not on the §5 table has a `# TODO labeler:` comment so we extend the table later.
 
 ---
 
-## 13. When the rule book is wrong
+## 14. When the rule book is wrong
 
 If you label a case and it feels wrong against this guide, the guide is probably the thing to fix. Open the case + this file side by side, propose the rule change in plain English, then update both. Don't quietly label against an unwritten rule -- that's how the test set ends up inconsistent.
