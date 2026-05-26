@@ -5,6 +5,9 @@ Usage:
     python scripts/transcribe.py audio/memo_001.m4a
     python scripts/transcribe.py audio/
     python scripts/transcribe.py audio/ --model small
+    
+    # To use the highest quality model (requires ~4-6GB RAM):
+    python scripts/transcribe.py audio/ --model large
 """
 import argparse
 from pathlib import Path
@@ -17,12 +20,14 @@ SUPPORTED_EXTENSIONS = {".m4a", ".mp3", ".wav", ".webm", ".mp4", ".mpeg", ".mpga
 # tiny (~75MB): fastest, lower accuracy -- good for quick tests
 # base (~150MB): recommended default -- fast, accurate for clear speech
 # small (~480MB): better accuracy for noisy/accented audio
-# medium (~1.5GB): highest accuracy, noticeably slower
+# medium (~1.5GB): high accuracy, noticeably slower
+# large (~2.9GB): highest accuracy, requires more RAM/processing
 MODEL_REPOS = {
     "tiny": "mlx-community/whisper-tiny-mlx",
     "base": "mlx-community/whisper-base-mlx",
     "small": "mlx-community/whisper-small-mlx",
     "medium": "mlx-community/whisper-medium-mlx",
+    "large": "mlx-community/whisper-large-v3-mlx", 
 }
 DEFAULT_MODEL = "base"
 
