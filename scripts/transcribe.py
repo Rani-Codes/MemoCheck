@@ -12,10 +12,18 @@ Usage:
     # Override output directory:
     python scripts/transcribe.py data/audio/ --output-dir some/other/dir
 
-Output:
-    Transcripts are written to data/transcripts/<stem>.txt by default.
+Output (per audio file):
+    data/transcripts/<stem>.txt  -- raw transcript (editable for ASR corrections)
+    data/transcripts/<stem>.json -- stub test case with id, transcript, and
+                                    memo_recorded_at pre-filled; labeler fills
+                                    in `category` and the `ground_truth` body.
+
+The .json stub is NOT overwritten if it already exists, so re-running on a
+labeled directory is safe. Delete the .json by hand if you want it regenerated.
 """
 import argparse
+import json
+from datetime import datetime
 from pathlib import Path
 
 import mlx_whisper
@@ -42,6 +50,41 @@ DEFAULT_OUTPUT_DIR = Path("data/transcripts")
 def transcribe_file(audio_path: Path, model_repo: str) -> str:
     result = mlx_whisper.transcribe(str(audio_path), path_or_hf_repo=model_repo)
     return result["text"].strip()
+
+
+def recording_timestamp(audio_path: Path) -> str:
+    """Return the audio file's creation timestamp as a TZ-aware ISO 8601 string
+    in the *local* timezone (with explicit UTC offset, e.g. -04:00).
+
+    Uses st_birthtime on macOS (the recording's actual creation moment).
+    Falls back to st_mtime on filesystems without birth time support.
+    """
+    stat = audio_path.stat()
+    ts = getattr(stat, "st_birthtime", stat.st_mtime)
+    return datetime.fromtimestamp(ts).astimezone().isoformat(timespec="seconds")
+
+
+def write_stub_json(audio_path: Path, transcript: str, output_dir: Path) -> Path | None:
+    """Write a stub TestCase JSON next to the .txt. Returns the path if a new
+    file was created, or None if a labeled JSON already exists (we never
+    overwrite labeler work)."""
+    out_path = output_dir / f"{audio_path.stem}.json"
+    if out_path.exists():
+        return None
+    stub = {
+        "id": audio_path.stem,
+        "category": "",
+        "transcript": transcript,
+        "memo_recorded_at": recording_timestamp(audio_path),
+        "ground_truth": {
+            "todos": [],
+            "events": [],
+            "reminders": [],
+            "notes": [],
+        },
+    }
+    out_path.write_text(json.dumps(stub, indent=2) + "\n")
+    return out_path
 
 
 def main() -> None:
@@ -79,10 +122,15 @@ def main() -> None:
     for audio_path in paths:
         print(f"Transcribing {audio_path.name}...")
         transcript = transcribe_file(audio_path, model_repo)
-        out_path = output_dir / f"{audio_path.stem}.txt"
-        out_path.write_text(transcript)
-        print(f"  Saved to {out_path}")
+        txt_path = output_dir / f"{audio_path.stem}.txt"
+        txt_path.write_text(transcript)
+        print(f"  Saved transcript to {txt_path}")
         print(f"  Transcript: {transcript[:80]}...")
+        stub_path = write_stub_json(audio_path, transcript, output_dir)
+        if stub_path is None:
+            print(f"  Stub JSON already exists at {output_dir / f'{audio_path.stem}.json'}, leaving it alone")
+        else:
+            print(f"  Wrote stub JSON to {stub_path}")
 
 
 if __name__ == "__main__":
