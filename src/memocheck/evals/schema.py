@@ -103,7 +103,6 @@ class GroundTruthExtractedMemo(BaseModel):
 
 class TestCase(BaseModel):
     id: str
-    category: str
     transcript: str
     memo_recorded_at: datetime
     ground_truth: GroundTruthExtractedMemo

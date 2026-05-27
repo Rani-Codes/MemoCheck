@@ -12,13 +12,12 @@ Read this section first. It shows the full shape of a labeled case and three wor
 
 ### Top-level shape
 
-Every test case file (`data/transcripts/memo_NNN.json`) has exactly five top-level fields:
+Every test case file (`data/transcripts/memo_NNN.json`) has exactly four top-level fields:
 
 ```json
 {
   "id": "memo_001",
-  "category": "type_classification",
-  "transcript": "<the corrected text of the memo>",
+  "transcript": "<the transcript text the agent will see>",
   "memo_recorded_at": "2026-05-26T10:30:00-04:00",
   "ground_truth": {
     "todos": [],
@@ -30,10 +29,11 @@ Every test case file (`data/transcripts/memo_NNN.json`) has exactly five top-lev
 ```
 
 - `id`: matches the audio filename stem (`memo_001.m4a` → `"memo_001"`).
-- `category`: a single short string tagging the dominant feature this case tests (e.g. `"type_classification"`, `"vague_dates"`, `"negation"`, `"multi_action"`). Used by the dashboard's per-category breakdown.
-- `transcript`: the corrected text the agent will see. Lightly fixed for ASR errors per §1, but keeps realistic noise (fillers, restarts).
+- `transcript`: the text the agent will see. After running `scripts/transcribe.py`, edit the corresponding `.txt` to lightly fix ASR errors per §1 (errors that change parse / intent / dates), then paste the corrected text into this field. Keep realistic noise (fillers, restarts, run-ons).
 - `memo_recorded_at`: TZ-aware ISO 8601 in the recording's *local* timezone (e.g. `-04:00` for EDT). `scripts/transcribe.py` fills this in for you from the audio file's creation timestamp -- you do not normally write it by hand.
-- `ground_truth`: contains four lists -- `todos`, `events`, `reminders`, `notes`. Use an empty list `[]` when the category has no items; never `null`.
+- `ground_truth`: contains four lists -- `todos`, `events`, `reminders`, `notes`. Use an empty list `[]` when a list has no items; never `null`.
+
+> The per-case **failure-mode categorization** (e.g. "this case tests negation") lives in [`test-set-composition.md`](test-set-composition.md) as design-doc metadata, not in this JSON. The eval reads only the fields above; the dashboard reads the categorization at analysis time.
 
 ### How `scripts/transcribe.py` helps
 
@@ -51,7 +51,6 @@ The "remind me to {verb}" framing does NOT promote this to a Reminder -- calling
 ```json
 {
   "id": "memo_001",
-  "category": "type_classification",
   "transcript": "Remind me to call the dentist tomorrow at 2pm. I need to schedule a cleaning.",
   "memo_recorded_at": "2026-05-26T10:30:00-04:00",
   "ground_truth": {
@@ -79,7 +78,6 @@ A booked, fixed-time, external commitment → CalendarEvent, not Todo.
 ```json
 {
   "id": "memo_007",
-  "category": "calendar_event_attendees",
   "transcript": "Team retrospective is Friday at 2pm in the main conference room. Alex, Jordan, and Sam all need to be there.",
   "memo_recorded_at": "2026-05-26T15:00:00-04:00",
   "ground_truth": {
@@ -111,7 +109,6 @@ Three distinct items, three different types. The "before Friday" deadline uses t
 ```json
 {
   "id": "memo_006",
-  "category": "mixed_types",
   "transcript": "Okay three things. Dentist appointment is confirmed for Tuesday at 3pm. Remind me to pay the credit card bill before Friday. And I still need to buy a birthday card for mom.",
   "memo_recorded_at": "2026-05-26T12:15:00-04:00",
   "ground_truth": {
@@ -424,15 +421,14 @@ print(datetime.fromtimestamp(ts).astimezone().isoformat(timespec='seconds'))"
 ## 13. Sanity checklist before saving a case
 
 1. The JSON validates against `TestCase` in `src/memocheck/evals/schema.py`.
-2. `memo_recorded_at` is a UTC datetime with explicit `Z` suffix.
+2. `memo_recorded_at` is a TZ-aware ISO 8601 datetime with an explicit offset (e.g. `-04:00`); every other datetime in the case carries the same offset string (see §11).
 3. Every date field on every item is either an exact form or a window form -- never both (Pydantic enforces this, but check anyway).
 4. Every `TodoItem` has a verb in the description (it's an *action*).
 5. Every `assignee` is the *doer*, not the *recipient*.
 6. Every `negated = true` item is one the speaker actually retracted in the transcript.
 7. No real actions are hiding in `notes`.
-8. The `category` field tags the dominant feature you wanted this case to test.
-9. Numeric references like "the 18th" resolved to the correct month per `memo_recorded_at`.
-10. Any vague-time phrase not on the §5 table has a `# TODO labeler:` comment so we extend the table later.
+8. Numeric references like "the 18th" resolved to the correct month per `memo_recorded_at`.
+9. Any vague-time phrase not on the §5 table has a `# TODO labeler:` comment so we extend the table later.
 
 ---
 
