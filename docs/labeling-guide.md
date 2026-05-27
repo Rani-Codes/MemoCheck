@@ -6,6 +6,169 @@ The Pydantic models that ground truth must satisfy are in `src/memocheck/evals/s
 
 ---
 
+## Quick start: what does a labeled test case look like?
+
+Read this section first. It shows the full shape of a labeled case and three worked examples covering all three item types. The numbered sections below define the rules; this section shows what success looks like.
+
+### Top-level shape
+
+Every test case file (`data/transcripts/memo_NNN.json`) has exactly five top-level fields:
+
+```json
+{
+  "id": "memo_001",
+  "category": "type_classification",
+  "transcript": "<the corrected text of the memo>",
+  "memo_recorded_at": "2026-05-26T10:30:00-04:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}
+```
+
+- `id`: matches the audio filename stem (`memo_001.m4a` → `"memo_001"`).
+- `category`: a single short string tagging the dominant feature this case tests (e.g. `"type_classification"`, `"vague_dates"`, `"negation"`, `"multi_action"`). Used by the dashboard's per-category breakdown.
+- `transcript`: the corrected text the agent will see. Lightly fixed for ASR errors per §1, but keeps realistic noise (fillers, restarts).
+- `memo_recorded_at`: TZ-aware ISO 8601 in the recording's *local* timezone (e.g. `-04:00` for EDT). `scripts/transcribe.py` fills this in for you from the audio file's creation timestamp -- you do not normally write it by hand.
+- `ground_truth`: contains four lists -- `todos`, `events`, `reminders`, `notes`. Use an empty list `[]` when the category has no items; never `null`.
+
+### How `scripts/transcribe.py` helps
+
+When you run `python scripts/transcribe.py data/audio/memo_NNN.m4a`, it writes two files into `data/transcripts/`:
+
+1. `memo_NNN.txt` -- the raw transcript. Edit it in place per §1 (ASR corrections).
+2. `memo_NNN.json` -- a stub TestCase with `id`, `transcript`, and `memo_recorded_at` already filled in. You fill in `category` and the `ground_truth` contents. The stub is **not** overwritten if it already exists -- it's safe to re-run transcribe on a partially-labeled directory.
+
+### Worked example A: single Todo (memo 01)
+
+Transcript: `"Remind me to call the dentist tomorrow at 2pm. I need to schedule a cleaning."`
+
+The "remind me to {verb}" framing does NOT promote this to a Reminder -- calling is an action. The second sentence is context, not a separate item.
+
+```json
+{
+  "id": "memo_001",
+  "category": "type_classification",
+  "transcript": "Remind me to call the dentist tomorrow at 2pm. I need to schedule a cleaning.",
+  "memo_recorded_at": "2026-05-26T10:30:00-04:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "call the dentist",
+        "due_date": "2026-05-27T14:00:00-04:00",
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}
+```
+
+### Worked example B: CalendarEvent with multiple attendees
+
+Transcript: `"Team retrospective is Friday at 2pm in the main conference room. Alex, Jordan, and Sam all need to be there."`
+
+A booked, fixed-time, external commitment → CalendarEvent, not Todo.
+
+```json
+{
+  "id": "memo_007",
+  "category": "calendar_event_attendees",
+  "transcript": "Team retrospective is Friday at 2pm in the main conference room. Alex, Jordan, and Sam all need to be there.",
+  "memo_recorded_at": "2026-05-26T15:00:00-04:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Team retrospective",
+        "start_datetime": "2026-05-29T14:00:00-04:00",
+        "duration_minutes": null,
+        "location": "main conference room",
+        "attendees": ["Alex", "Jordan", "Sam"],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}
+```
+
+Note `duration_minutes: null` -- the speaker did not say how long the meeting runs, so we do not infer.
+
+### Worked example C: mixed types in one memo (Todo + Event + Todo with vague-date window)
+
+Transcript: `"Okay three things. Dentist appointment is confirmed for Tuesday at 3pm. Remind me to pay the credit card bill before Friday. And I still need to buy a birthday card for mom."`
+
+Three distinct items, three different types. The "before Friday" deadline uses the **window form** (`due_date_window`) because it's a constraint, not an exact moment. The mom card has no date at all.
+
+```json
+{
+  "id": "memo_006",
+  "category": "mixed_types",
+  "transcript": "Okay three things. Dentist appointment is confirmed for Tuesday at 3pm. Remind me to pay the credit card bill before Friday. And I still need to buy a birthday card for mom.",
+  "memo_recorded_at": "2026-05-26T12:15:00-04:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "pay the credit card bill",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T23:59:00-04:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "buy a birthday card for mom",
+        "due_date": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [
+      {
+        "title": "Dentist appointment",
+        "start_datetime": "2026-05-26T15:00:00-04:00",
+        "duration_minutes": null,
+        "location": null,
+        "attendees": [],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}
+```
+
+Three things to notice in this example:
+
+1. **`due_date` vs `due_date_window` are mutually exclusive.** The first todo uses `due_date_window` (because "before Friday" is a range), so its `due_date` is `null`. The second todo has no date at all, so both are absent / null.
+2. **"Before Friday" → `{end: <Thursday> 23:59}` (open start).** Per §7, "before {weekday}" means *prior weekday EOD*. Friday was 2026-05-29 in this example, so the deadline lands on Thursday 2026-05-28.
+3. **The credit-card item is a Todo, not a Reminder.** "Pay" is an action; the "remind me to" framing does not promote it to a Reminder. See §2.
+
+### What an empty ground truth looks like
+
+If a memo is purely observational ("just a note: the back door lock is sticking"), the ground truth has only `notes`:
+
+```json
+"ground_truth": {
+  "todos": [],
+  "events": [],
+  "reminders": [],
+  "notes": ["back door lock is sticking again"]
+}
+```
+
+Never use `null` for a list field. Always `[]`.
+
+---
+
 ## 0. Source-of-truth precedence
 
 When two documents conflict, this guide wins for *labeling decisions*. CLAUDE.md and CONTEXT.md should reference this file rather than restate its rules.
@@ -223,10 +386,29 @@ Do **not** route real actions into `notes` to dodge type classification -- if it
 
 ## 11. Timezone and `memo_recorded_at`
 
-- All datetimes in ground truth are UTC by convention, anchored to `memo_recorded_at`.
-- `memo_recorded_at` itself is a single UTC datetime captured at recording time (the timestamp on the audio file is the source of truth).
-- Local-time phrasing in the transcript ("9am", "tomorrow morning") is resolved using the speaker's local timezone implied by `memo_recorded_at`, then expressed in UTC in the ground truth.
-- For the v0 test set, every recording is assumed to be in the speaker's local timezone with no DST ambiguity. v2 may revisit.
+**All datetimes in a single test case share the same timezone: the recording's local timezone with an explicit ISO 8601 offset** (e.g. `-04:00` for EDT, `-05:00` for EST). This applies to `memo_recorded_at`, every `due_date`, every `start_datetime`, every `remind_at`, and every `TimeWindow.start` / `TimeWindow.end`. They must all carry the same offset string.
+
+### Why local-with-offset, not UTC
+
+The labeler reads "tomorrow at 2pm" in the transcript and interprets it in their head as 2pm *local* time. If ground truth were UTC, the labeler would do a mental TZ conversion on every datetime. By using local-with-offset, the labeler types the time they hear and appends a fixed offset string. The eval compares instants -- mathematically equivalent to UTC -- but ergonomically far better for labeling.
+
+### How `memo_recorded_at` is set
+
+You don't normally write it by hand. `scripts/transcribe.py` reads the audio file's creation timestamp (`st_birthtime` on macOS), converts to the system's local timezone, and serializes as ISO 8601 with offset. Example output: `"2026-05-26T10:30:00-04:00"`.
+
+If you need to set it manually, the macOS one-liner is:
+
+```bash
+python3 -c "from pathlib import Path; from datetime import datetime; \
+p = Path('data/audio/memo_001.m4a'); ts = p.stat().st_birthtime; \
+print(datetime.fromtimestamp(ts).astimezone().isoformat(timespec='seconds'))"
+```
+
+### Constraints for the v0 test set
+
+- Every recording is assumed to be in the speaker's local timezone.
+- DST is not handled specially; if a recording straddles a DST transition (e.g. recorded on a Sunday morning when clocks shifted), the offset chosen is whichever the speaker is operating in at recording time.
+- Cross-timezone scenarios (recorded in one TZ, referencing events in another) are out of scope for v0. v2 may revisit.
 
 ---
 
