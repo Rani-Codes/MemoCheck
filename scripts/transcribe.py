@@ -73,7 +73,6 @@ def write_stub_json(audio_path: Path, transcript: str, output_dir: Path) -> Path
         return None
     stub = {
         "id": audio_path.stem,
-        "category": "",
         "transcript": transcript,
         "memo_recorded_at": recording_timestamp(audio_path),
         "ground_truth": {
