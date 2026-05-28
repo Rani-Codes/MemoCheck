@@ -77,7 +77,7 @@ def _load_default_embedder() -> Embedder:
 def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     a_norm = a / np.linalg.norm(a, axis=1, keepdims=True)
     b_norm = b / np.linalg.norm(b, axis=1, keepdims=True)
-    return a_norm @ b_norm.T
+    return np.asarray(a_norm @ b_norm.T)
 
 
 def match(
