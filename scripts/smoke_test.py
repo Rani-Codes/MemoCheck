@@ -16,7 +16,7 @@ RECORDED_AT = "2026-05-09T10:00:00Z"
 PROVIDERS = [
     "anthropic/claude-haiku-4-5",
     "openai/gpt-4.1-mini",
-    "gemini/gemini-3.1-flash-lite-preview",
+    "gemini/gemini-3.1-flash-lite",
     "groq/llama-3.3-70b-versatile",
 ]
 
