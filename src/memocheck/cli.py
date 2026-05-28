@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import get_args
 
 import typer
+from dotenv import load_dotenv
 
 from memocheck.evals.dataset import (
     Slice,
@@ -65,6 +66,8 @@ def run(
     held_out_ids: Path = typer.Option(Path("data/held_out_ids.txt")),
 ) -> None:
     """Run the eval batch. Resumable: existing successful attempts in DB are skipped."""
+    # Load .env so DATABASE_URL and provider API keys (read by litellm) are present.
+    load_dotenv()
     if case_slice not in ALLOWED_SLICES:
         raise typer.BadParameter(
             f"--slice must be one of {sorted(ALLOWED_SLICES)}, got {case_slice!r}"
