@@ -13,6 +13,10 @@ Used by:
 - **8 synthetic edge cases** (TBD -- not yet authored). Typed transcripts targeting failure modes the self-recorded set under-covers (negation, disfluency, and retraction primarily).
 - **Visible / held-out split:** 24 visible cases + 6 held-out per [`adr/004-held-out-test-set.md`](adr/004-held-out-test-set.md). The held-out IDs are tracked separately and not inspected during v1 prompt design.
 
+## Class distribution rationale
+
+The Reminder class (pure awareness, no attached action) is deliberately a small fraction of the test set. Real-world voice memos are overwhelmingly action-driven ("call X", "pick up Y", "send Z") because that is what people actually record memos for. A test set that over-indexed on Reminders would not reflect production usage, so the bulk of the self-recorded set produces Todos and Events. The Reminder class is covered primarily through synthetic edge cases (anniversaries, birthdays, dates of pre-existing appointments). The trade-off accepted: Reminder-specific metrics in the leaderboard will be computed on a smaller N than Todo metrics. This is called out as a limitation in the writeup's methodology section.
+
 ## Per-case categorization
 
 | ID | Category | Eval target |
