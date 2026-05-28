@@ -11,11 +11,15 @@ Both ground-truth and agent date fields can be one of: a `date` (all-day), a `da
 1. If *both* ground-truth date fields (`remind_at` / `remind_at_window`, etc.) are null → pass iff the agent's date field is also null; fail otherwise.
 2. Normalize each side:
    - A `datetime` becomes the point `[dt, dt]`, with a ±60s tolerance applied symmetrically when comparing point-to-point.
-   - A `date` becomes the inclusive window `[date 00:00:00, date 23:59:59]` UTC.
+   - A `date` becomes the inclusive window `[date 00:00:00, date 23:59:59]` in the memo's local timezone.
    - A `TimeWindow` is used as-is.
 3. Pass iff the agent's normalized point/window overlaps the ground-truth's normalized window.
 
 This is one function. No per-shape branches.
+
+### Timezone normalization (naive agent output)
+
+Ground truth is authored tz-aware in the memo's local offset (see "Known limitations" below); the agent emits naive local wall-clock datetimes per `agent/prompts/v0.py`. Before the overlap check the scorer localizes any naive value to the memo's timezone (`memo_recorded_at`'s offset, threaded into `score_case` as `default_tz`), making both sides tz-aware. Comparison of tz-aware datetimes is by true instant -- effectively UTC -- so a model that emits an explicit offset or trailing `Z` is scored correctly too. The agent is never asked to reason about UTC; the conversion lives entirely in the scorer. Without this step, comparing an aware GT datetime to a naive agent datetime raises `TypeError: can't compare offset-naive and offset-aware datetimes`.
 
 ### Known limitations accepted for v0
 

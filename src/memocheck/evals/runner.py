@@ -62,10 +62,11 @@ def run_case(
             score=None,
         )
     match_result = match(test_case.ground_truth, extraction.output)
+    # Localize naive agent datetimes to the memo's offset before scoring (ADR-003).
     return CaseResult(
         test_case_id=test_case.id,
         extraction=extraction,
-        score=score_case(match_result),
+        score=score_case(match_result, default_tz=test_case.memo_recorded_at.tzinfo),
     )
 
 

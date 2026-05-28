@@ -4,11 +4,21 @@ Deterministic scorer per ADR-001.
 Reads a `MatchResult` from the matcher and produces a per-case `CaseScore`
 covering all metrics derived from matching. Schema Adherence is tracked
 separately on `ExtractionResult.schema_valid` by the runner.
+
+Timezone handling (ADR-003): ground truth is authored tz-aware in the memo's
+local offset, while the agent emits naive local wall-clock datetimes (see
+`agent/prompts/v0.py`). Before any date comparison we localize naive values to
+the memo's timezone (`default_tz`, threaded in from `memo_recorded_at`) so both
+sides become tz-aware. Comparing tz-aware datetimes is by true instant -- i.e.
+the comparison happens in UTC -- which also handles a model that emits an
+explicit offset or trailing `Z`. The agent never reasons about UTC; the
+conversion lives entirely here. When `default_tz` is None (naive-only unit
+tests) localization is a no-op, preserving naive-vs-naive comparison.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, tzinfo
 from typing import Optional, Union
 
 from memocheck.evals.matcher import FlattenedItem, MatchResult
@@ -36,7 +46,16 @@ class CaseScore:
     negation_false_negative: int = 0  # agent=False, gt=True
 
 
-def score_case(match_result: MatchResult) -> CaseScore:
+def score_case(
+    match_result: MatchResult, *, default_tz: tzinfo | None = None
+) -> CaseScore:
+    """Score one matched case.
+
+    `default_tz` is the memo's local timezone (from `memo_recorded_at`). Naive
+    datetimes on either side are localized to it before date comparison (see the
+    module docstring). The real runner always passes it; it defaults to None so
+    naive-only unit tests keep working unchanged.
+    """
     matched = match_result.matched
     unmatched_gt = match_result.unmatched_gt
     unmatched_agent = match_result.unmatched_agent
@@ -54,7 +73,7 @@ def score_case(match_result: MatchResult) -> CaseScore:
         if type_match:
             type_correct += 1
             date_pair_count += 1
-            if _date_passes(gt, ag):
+            if _date_passes(gt, ag, default_tz):
                 date_correct += 1
             if gt.type in ("todo", "event"):
                 attribution_pair_count += 1
@@ -85,9 +104,11 @@ def score_case(match_result: MatchResult) -> CaseScore:
     )
 
 
-def _date_passes(gt: FlattenedItem, ag: FlattenedItem) -> bool:
-    gt_window = _gt_date_window(gt)
-    ag_window = _agent_date_window(ag)
+def _date_passes(
+    gt: FlattenedItem, ag: FlattenedItem, default_tz: tzinfo | None
+) -> bool:
+    gt_window = _gt_date_window(gt, default_tz)
+    ag_window = _agent_date_window(ag, default_tz)
     if gt_window is None and ag_window is None:
         return True
     if gt_window is None or ag_window is None:
@@ -95,28 +116,34 @@ def _date_passes(gt: FlattenedItem, ag: FlattenedItem) -> bool:
     return _windows_overlap(gt_window, ag_window)
 
 
-def _gt_date_window(item: FlattenedItem) -> Optional[TimeWindow]:
+def _gt_date_window(
+    item: FlattenedItem, default_tz: tzinfo | None
+) -> Optional[TimeWindow]:
     orig = item.original
     # Locals annotated because FlattenedItem.original is Any (matcher type tag).
     if item.type == "todo":
         win: Optional[TimeWindow] = orig.due_date_window
         if win is not None:
-            return win
-        return _value_to_window(orig.due_date, tolerance=False)
+            return _localize_window(win, default_tz)
+        return _value_to_window(orig.due_date, tolerance=False, default_tz=default_tz)
     if item.type == "reminder":
         win = orig.remind_at_window
         if win is not None:
-            return win
-        return _value_to_window(orig.remind_at, tolerance=False)
+            return _localize_window(win, default_tz)
+        return _value_to_window(orig.remind_at, tolerance=False, default_tz=default_tz)
     if item.type == "event":
         win = orig.start_datetime_window
         if win is not None:
-            return win
-        return _value_to_window(orig.start_datetime, tolerance=False)
+            return _localize_window(win, default_tz)
+        return _value_to_window(
+            orig.start_datetime, tolerance=False, default_tz=default_tz
+        )
     raise ValueError(f"unknown item type {item.type!r}")
 
 
-def _agent_date_window(item: FlattenedItem) -> Optional[TimeWindow]:
+def _agent_date_window(
+    item: FlattenedItem, default_tz: tzinfo | None
+) -> Optional[TimeWindow]:
     orig = item.original
     if item.type == "todo":
         val = orig.due_date
@@ -126,22 +153,44 @@ def _agent_date_window(item: FlattenedItem) -> Optional[TimeWindow]:
         val = orig.start_datetime
     else:
         raise ValueError(f"unknown item type {item.type!r}")
-    return _value_to_window(val, tolerance=True)
+    return _value_to_window(val, tolerance=True, default_tz=default_tz)
 
 
-def _value_to_window(val: DateValue, *, tolerance: bool) -> Optional[TimeWindow]:
+def _localize(dt: datetime, default_tz: tzinfo | None) -> datetime:
+    """Attach `default_tz` to a naive datetime; leave aware datetimes untouched.
+
+    ADR-003 guarantees every datetime in a case shares the memo's offset, so a
+    naive agent value is by construction in `default_tz`. No-op when default_tz
+    is None.
+    """
+    if dt.tzinfo is None and default_tz is not None:
+        return dt.replace(tzinfo=default_tz)
+    return dt
+
+
+def _localize_window(win: TimeWindow, default_tz: tzinfo | None) -> TimeWindow:
+    return TimeWindow(
+        start=_localize(win.start, default_tz) if win.start is not None else None,
+        end=_localize(win.end, default_tz) if win.end is not None else None,
+    )
+
+
+def _value_to_window(
+    val: DateValue, *, tolerance: bool, default_tz: tzinfo | None
+) -> Optional[TimeWindow]:
     if val is None:
         return None
     # NOTE: isinstance(datetime) must be checked first; datetime is a subclass of date.
     if isinstance(val, datetime):
+        dt = _localize(val, default_tz)
         if tolerance:
             slop = timedelta(seconds=TOLERANCE_SECONDS)
-            return TimeWindow(start=val - slop, end=val + slop)
-        return TimeWindow(start=val, end=val)
+            return TimeWindow(start=dt - slop, end=dt + slop)
+        return TimeWindow(start=dt, end=dt)
     if isinstance(val, date):
         return TimeWindow(
-            start=datetime.combine(val, time.min),
-            end=datetime.combine(val, time.max),
+            start=_localize(datetime.combine(val, time.min), default_tz),
+            end=_localize(datetime.combine(val, time.max), default_tz),
         )
     raise TypeError(f"unsupported date value type {type(val).__name__}")
 

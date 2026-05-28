@@ -117,7 +117,15 @@ def run(
 
 @app.command()
 def report() -> None:
-    """Aggregate metrics from the DB. Wired up in step 9 once v0 / v1 runs exist."""
+    """Aggregate metrics from the DB. Wired up in step 9 once v0 / v1 runs exist.
+
+    REMINDER (step 9): compute Schema Adherence from `test_runs.schema_valid`,
+    NOT from the `metric_scores` table. The schema_adherence metric row is
+    skipped on the extraction-error path, so the metric_scores copy is biased
+    upward; `test_runs.schema_valid` is written on every row and is complete.
+    Exclude network/infra failures (rows with a non-validation `error_message`)
+    from the denominator so they are not miscounted as schema failures.
+    """
     typer.echo("report: not yet implemented (step 9)")
 
 

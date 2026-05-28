@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta, timezone
 
 from memocheck.agent.schema import (
     CalendarEvent,
@@ -577,3 +577,85 @@ def test_negation_scored_on_type_mismatched_pairs_too():
     assert score.type_correct == 0
     assert score.negation_pair_count == 1
     assert score.negation_correct == 1
+
+
+# --- Timezone normalization (ADR-003) -------------------------------------
+# GT is authored tz-aware in the memo's offset; the agent emits naive local
+# wall-clock. score_case localizes naive values to default_tz before comparing,
+# so both sides become tz-aware and compare by true instant (i.e. in UTC).
+
+PDT = timezone(timedelta(hours=-7))  # the memo-local offset used across the test set
+
+
+def test_date_accuracy_aware_gt_naive_agent_same_local_passes():
+    """Real-data shape: GT aware (-07:00), agent naive local. Once localized via
+    default_tz they are the same instant -> pass. Regression for the
+    aware-vs-naive TypeError crash."""
+    gt = _gt_todo_item(
+        "call dentist", due_date=datetime(2026, 5, 27, 14, 0, tzinfo=PDT)
+    )
+    ag = _agent_todo_item("call dentist", due_date=datetime(2026, 5, 27, 14, 0))
+    match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])
+
+    score = score_case(match_result, default_tz=PDT)
+
+    assert score.date_correct == 1
+    assert score.date_pair_count == 1
+
+
+def test_date_accuracy_aware_gt_naive_agent_wrong_hour_fails():
+    gt = _gt_todo_item(
+        "call dentist", due_date=datetime(2026, 5, 27, 14, 0, tzinfo=PDT)
+    )
+    ag = _agent_todo_item("call dentist", due_date=datetime(2026, 5, 27, 16, 0))
+    match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])
+
+    score = score_case(match_result, default_tz=PDT)
+
+    assert score.date_correct == 0
+    assert score.date_pair_count == 1
+
+
+def test_date_accuracy_agent_emits_utc_instant_passes():
+    """A model that emits the correct instant as UTC 'Z' instead of naive local
+    is still scored correct (aware-vs-aware instant comparison). 14:00-07:00 ==
+    21:00Z."""
+    gt = _gt_todo_item(
+        "call dentist", due_date=datetime(2026, 5, 27, 14, 0, tzinfo=PDT)
+    )
+    ag = _agent_todo_item(
+        "call dentist", due_date=datetime(2026, 5, 27, 21, 0, tzinfo=timezone.utc)
+    )
+    match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])
+
+    score = score_case(match_result, default_tz=PDT)
+
+    assert score.date_correct == 1
+
+
+def test_date_accuracy_aware_gt_window_naive_agent_within_passes():
+    """Aware GT window + naive agent datetime; window bounds are localized too."""
+    gt = _gt_todo_item(
+        "call dentist",
+        due_date_window=TimeWindow(
+            start=datetime(2026, 5, 11, 0, 0, tzinfo=PDT),
+            end=datetime(2026, 5, 17, 23, 59, 59, tzinfo=PDT),
+        ),
+    )
+    ag = _agent_todo_item("call dentist", due_date=datetime(2026, 5, 14, 10, 0))
+    match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])
+
+    score = score_case(match_result, default_tz=PDT)
+
+    assert score.date_correct == 1
+
+
+def test_date_accuracy_naive_both_no_default_tz_backward_compatible():
+    """Existing naive-only path: no default_tz, both naive -> unchanged behavior."""
+    gt = _gt_todo_item("send proposal", due_date=datetime(2026, 6, 4, 17, 0))
+    ag = _agent_todo_item("send proposal", due_date=datetime(2026, 6, 4, 17, 0))
+    match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])
+
+    score = score_case(match_result)
+
+    assert score.date_correct == 1
