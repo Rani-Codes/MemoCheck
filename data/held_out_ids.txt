@@ -1,0 +1,14 @@
+# Held-out test case IDs (ADR-004).
+#
+# The runner reads this file to gate held-out cases from v0 / failure-mode
+# analysis / v1 prompt design. Do NOT inspect the transcripts or ground truth
+# of these cases until v1 is fully designed. See docs/adr/004-held-out-test-set.md
+# for the locked methodology.
+#
+# One ID per line. Lines starting with `#` are comments.
+memo_001
+memo_005
+memo_009
+memo_011
+memo_016
+memo_022
