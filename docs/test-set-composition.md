@@ -10,7 +10,7 @@ Used by:
 ## How the test set is structured
 
 - **22 self-recorded transcripts** -- short voice memos recorded by the project author, transcribed via `scripts/transcribe.py`, then hand-labeled per [`labeling-guide.md`](labeling-guide.md). Audio is not in the public repo (privacy + size); the canonical labeled artifacts are the JSON files in `data/transcripts/`. The verbose per-memo recording scripts live in `reference/voice-memo-scripts.md` (gitignored).
-- **8 synthetic edge cases** (TBD -- not yet authored). Typed transcripts targeting failure modes the self-recorded set under-covers (negation, disfluency, and retraction primarily).
+- **8 synthetic edge cases.** Typed transcripts targeting failure modes the self-recorded set under-covers. Locked allocation: 3 Reminder-type cases (the Reminder coverage gap in the self-recorded set) + 5 negation / disfluency / retraction cases (these failure modes need explicit signal beyond memo_021 / memo_022).
 - **Visible / held-out split:** 24 visible cases + 6 held-out per [`adr/004-held-out-test-set.md`](adr/004-held-out-test-set.md). The held-out IDs are tracked separately and not inspected during v1 prompt design.
 
 ## Class distribution rationale
@@ -43,34 +43,41 @@ The Reminder class (pure awareness, no attached action) is deliberately a small 
 | memo_020 | vague_time_of_day | Multi-item memo exercising every vague-time-of-day phrase ("after lunch", "before I leave today", specific times). |
 | memo_021 | negation | True retraction ("actually scratch that, I already did it") → item retained with `negated = true`. |
 | memo_022 | negation_false_positive | Mid-thought correction ("3, no wait, 3:30") is NOT negation → single event with `negated = false`. |
-| synth_001 | TBD | TBD -- to be authored. Likely target: synthetic retraction with disfluency. |
-| synth_002 | TBD | TBD. |
-| synth_003 | TBD | TBD. |
-| synth_004 | TBD | TBD. |
-| synth_005 | TBD | TBD. |
-| synth_006 | TBD | TBD. |
-| synth_007 | TBD | TBD. |
-| synth_008 | TBD | TBD. |
+| synth_001 | reminder_pure | Pure awareness Reminder (anniversary / birthday / known appointment date) with no attached action; no Todo or Event should be produced. |
+| synth_002 | reminder_with_date | Reminder with a vague-date window ("sometime around the holidays") to test Reminder + `remind_at_window` encoding. |
+| synth_003 | reminder_with_retraction | Reminder followed by an explicit retraction; tests Negation Handling on the Reminder type (memo_021 covers it only on Todo). |
+| synth_004 | negation_explicit | Action item explicitly cancelled mid-memo ("scratch that") on a different item type than memo_021 (e.g. a CalendarEvent or a non-email Todo). |
+| synth_005 | negation_partial | Multi-item memo where ONE item is retracted and the others stand; tests that the agent does not over-apply `negated` to neighbors. |
+| synth_006 | disfluency_heavy | Restarts, fillers, and run-on phrasing without any negation; pure disfluency stress test. |
+| synth_007 | self_correction_value | Mid-sentence value correction on a field other than the time-of-day used in memo_022 (e.g. attendee name, location); must NOT mark `negated`. |
+| synth_008 | negation_false_positive | "Don't"-emphasis trap distinct from memo_003's "don't want to forget"; e.g. "remind me NOT to email her back" where `negated = false` because the speaker is reinforcing, not retracting. |
 
-## Category counts (preliminary -- 22 of 30 cases categorized)
+## Category counts (allocation locked; transcripts + GT pending for synth_001..008)
 
-| Category | Count | Memos |
+| Category | Count | Cases |
 |---|---|---|
-| multi_action | 4 | 5, 13, 16, 20 |
-| vague_dates | 3 | 8, 9, 10 |
-| assignee_semantics | 3 | 11, 12, 18 |
-| type_classification | 2 | 1, 19 |
-| calendar_event_full | 1 | 3 |
-| calendar_event_attendees | 1 | 7 |
-| mixed_types | 1 | 6 |
-| no_date | 1 | 2 |
-| notes_only | 1 | 4 |
-| hallucination_trigger | 1 | 14 |
-| uncertain_event | 1 | 15 |
-| multi_item_pattern | 1 | 17 |
-| vague_time_of_day | 1 | 20 |
-| negation | 1 | 21 |
-| negation_false_positive | 1 | 22 |
-| TBD (synthetic) | 8 | synth_001..008 |
+| multi_action | 4 | memo_005, memo_013, memo_016, memo_020 |
+| vague_dates | 3 | memo_008, memo_009, memo_010 |
+| assignee_semantics | 3 | memo_011, memo_012, memo_018 |
+| type_classification | 2 | memo_001, memo_019 |
+| calendar_event_full | 1 | memo_003 |
+| calendar_event_attendees | 1 | memo_007 |
+| mixed_types | 1 | memo_006 |
+| no_date | 1 | memo_002 |
+| notes_only | 1 | memo_004 |
+| hallucination_trigger | 1 | memo_014 |
+| uncertain_event | 1 | memo_015 |
+| multi_item_pattern | 1 | memo_017 |
+| vague_time_of_day | 1 | memo_020 |
+| negation | 1 | memo_021 |
+| negation_false_positive | 1 | memo_022 |
+| reminder_pure | 1 | synth_001 |
+| reminder_with_date | 1 | synth_002 |
+| reminder_with_retraction | 1 | synth_003 |
+| negation_explicit | 1 | synth_004 |
+| negation_partial | 1 | synth_005 |
+| disfluency_heavy | 1 | synth_006 |
+| self_correction_value | 1 | synth_007 |
+| negation_false_positive | 1 | synth_008 |
 
-Once the synthetic cases are authored, lock the final counts before running v1.
+Counts re-confirm once GT for synth_001..008 is on disk and re-validated.

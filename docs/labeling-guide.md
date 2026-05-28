@@ -197,6 +197,8 @@ MemoCheck benchmarks the LLM's *intent-extraction* layer, not its ability to rep
 
 The `.txt` file is the editable stepping-stone. The `.json` is the canonical artifact the eval reads.
 
+**Synthetic cases skip this step.** Typed synthetic transcripts (`synth_NNN.json`) have no ASR stage, so no `.txt` is produced. The `transcript` field in the JSON is the only source of truth for those cases.
+
 ---
 
 ## 2. Type classification (Todo vs Reminder vs CalendarEvent)
