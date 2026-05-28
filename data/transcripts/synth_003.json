@@ -1,0 +1,17 @@
+{
+  "id": "synth_003",
+  "transcript": "Remind me next Monday that my parents' flight lands that morning at 9am. Actually scratch that, they moved it to Tuesday so I'll set up the reminder later.",
+  "memo_recorded_at": "2026-05-26T13:00:00-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [],
+    "reminders": [
+      {
+        "description": "parents' flight lands at 9am",
+        "remind_at": "2026-06-01T09:00:00-07:00",
+        "negated": true
+      }
+    ],
+    "notes": []
+  }
+}

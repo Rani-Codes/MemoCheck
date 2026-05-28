@@ -1,0 +1,20 @@
+{
+  "id": "synth_007",
+  "transcript": "Coffee meeting with Sarah, no wait, with Rebecca, Thursday at 9am at Pike Street Starbucks.",
+  "memo_recorded_at": "2026-05-26T09:00:00-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Coffee meeting with Rebecca",
+        "start_datetime": "2026-05-28T09:00:00-07:00",
+        "duration_minutes": null,
+        "location": "Pike Street Starbucks",
+        "attendees": ["Rebecca"],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}

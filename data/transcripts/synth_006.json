@@ -1,0 +1,19 @@
+{
+  "id": "synth_006",
+  "transcript": "Okay so, uh, I need to, hmm, let me think, yeah, send the, the quarterly report to, um, what's her name, Diane, by Friday. Yeah. Friday at the latest.",
+  "memo_recorded_at": "2026-05-26T16:00:00-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Send the quarterly report to Diane",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-29T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

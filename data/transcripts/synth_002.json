@@ -1,0 +1,20 @@
+{
+  "id": "synth_002",
+  "transcript": "Remind me sometime next week that my car warranty expires at the end of the month. The dealer said no action needed unless I want to extend.",
+  "memo_recorded_at": "2026-05-26T11:00:00-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [],
+    "reminders": [
+      {
+        "description": "car warranty expires at end of month",
+        "remind_at_window": {
+          "start": "2026-06-01T00:00:00-07:00",
+          "end": "2026-06-07T23:59:00-07:00"
+        },
+        "negated": false
+      }
+    ],
+    "notes": []
+  }
+}

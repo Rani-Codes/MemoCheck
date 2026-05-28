@@ -1,0 +1,31 @@
+{
+  "id": "synth_005",
+  "transcript": "Three things from the team sync. Email Marcus about the Q3 budget. Pick up the dry cleaning Friday before 6pm. And book the flights for the Austin conference. Actually scratch the flights, Marcus said he's covering those.",
+  "memo_recorded_at": "2026-05-26T15:00:00-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Email Marcus about the Q3 budget",
+        "due_date": null,
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Pick up the dry cleaning",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-29T18:00:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Book the flights for the Austin conference",
+        "due_date": null,
+        "assignee": null,
+        "negated": true
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

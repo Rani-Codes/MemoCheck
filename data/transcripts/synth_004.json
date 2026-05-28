@@ -1,0 +1,20 @@
+{
+  "id": "synth_004",
+  "transcript": "The product demo on Thursday at 2pm in the boardroom is officially happening. Actually never mind, we just got word it's cancelled.",
+  "memo_recorded_at": "2026-05-26T14:00:00-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "product demo",
+        "start_datetime": "2026-05-28T14:00:00-07:00",
+        "duration_minutes": null,
+        "location": "boardroom",
+        "attendees": [],
+        "negated": true
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "synth_001",
+  "transcript": "Just remind me that mom and dad's anniversary is on June 12th. Nothing I need to do, just want it on my radar.",
+  "memo_recorded_at": "2026-05-26T10:00:00-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [],
+    "reminders": [
+      {
+        "description": "mom and dad's anniversary",
+        "remind_at": "2026-06-12",
+        "negated": false
+      }
+    ],
+    "notes": []
+  }
+}
