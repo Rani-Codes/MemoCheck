@@ -21,6 +21,9 @@ dependencies = [
     "openai>=1.0.0",
     "mlx-whisper>=0.3.0",
     "pandas>=2.0.0",
+    "sentence-transformers>=3.0.0",
+    "scipy>=1.11.0",
+    "numpy>=2.0.0",
 ]
 
 [project.optional-dependencies]
@@ -50,3 +53,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-m 'not slow'"
+markers = [
+    "slow: marks tests that load real ML models or hit the network",
+]
