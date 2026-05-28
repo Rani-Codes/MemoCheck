@@ -1,22 +1,18 @@
 from datetime import date, datetime
 
-import pytest
-
 from memocheck.agent.schema import (
     CalendarEvent,
-    ExtractedMemo,
     Reminder,
     TodoItem,
 )
 from memocheck.evals.matcher import FlattenedItem, MatchResult
-from memocheck.evals.scorer import CaseScore, score_case
 from memocheck.evals.schema import (
     GroundTruthCalendarEvent,
-    GroundTruthExtractedMemo,
     GroundTruthReminder,
     GroundTruthTodoItem,
     TimeWindow,
 )
+from memocheck.evals.scorer import score_case
 
 
 def _gt_todo_item(description="x", **kwargs):
@@ -439,7 +435,7 @@ def test_attribution_event_empty_attendees_both_sides_passes():
 
 
 def test_attribution_excludes_reminder_pairs():
-    """Reminders have no assignee/attendees -> not counted in attribution denominator."""
+    """Reminders have no assignee/attendees -> excluded from attribution denom."""
     gt = _gt_reminder_item("mom's birthday", remind_at=date(2026, 6, 10))
     ag = _agent_reminder_item("mom's birthday", remind_at=date(2026, 6, 10))
     match_result = MatchResult(matched=[(gt, ag)], unmatched_gt=[], unmatched_agent=[])

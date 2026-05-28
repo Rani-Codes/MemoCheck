@@ -53,7 +53,8 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-m 'not slow'"
+addopts = "-m 'not slow and not integration'"
 markers = [
     "slow: marks tests that load real ML models or hit the network",
+    "integration: marks tests that require a live Postgres (DATABASE_URL); skip if unreachable",
 ]
