@@ -1,0 +1,19 @@
+{
+  "id": "memo_021",
+  "transcript": "Remind me to email Sarah about the contract this afternoon. Actually scratch that, I already sent it earlier.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Email Sarah about the contract",
+        "due_date": null,
+        "due_date_window": {"start": "2026-05-26T12:00:00-07:00", "end": "2026-05-26T18:00:00-07:00"},
+        "assignee": null,
+        "negated": true
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

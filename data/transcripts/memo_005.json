@@ -1,0 +1,26 @@
+{
+  "id": "memo_005",
+  "transcript": "Two things I need to handle today. Email the landlord about the heating and order more dog food because we're almost out.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Email the landlord about the heating",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-26T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Order more dog food",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-26T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

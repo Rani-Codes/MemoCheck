@@ -1,0 +1,19 @@
+{
+  "id": "memo_002",
+  "transcript": "I need to pick up a new HDMI cable. I'll probably just order it online.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "pick up a new HDMI cable",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "memo_014",
+  "transcript": "Budget review meeting is on the 15th at 2.30pm. We looked at Q3 numbers, came in around 2.3 million, about 12% above Q2. Nothing to action from my side, just wanted to note the outcome.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Budget review meeting",
+        "start_datetime": "2026-06-15T14:30:00-07:00",
+        "start_datetime_window": null,
+        "duration_minutes": null,
+        "location": null,
+        "attendees": [],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": ["Q3 numbers came in around 2.3 million, 12% above Q2"]
+  }
+}

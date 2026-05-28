@@ -1,0 +1,19 @@
+{
+  "id": "memo_019",
+  "transcript": "The gym membership auto-renews on the 20th and I keep meaning to cancel it. Set a reminder for the 18th so I actually have time to do it. This has been on my list for three months.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Cancel gym membership",
+        "due_date": null,
+        "due_date_window": {"end": "2026-06-18T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": ["gym membership auto-renews on the 20th"]
+  }
+}

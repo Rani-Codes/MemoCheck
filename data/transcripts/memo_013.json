@@ -1,0 +1,50 @@
+{
+  "id": "memo_013",
+  "transcript": "A bunch of things to keep track of. I have a call with the accountant Monday at 9am. Car registration is also due this month. Need to renew it online. Pick up my prescription from Walgreens whenever I get a chance. There's also an expense report that's due this Friday. Need to submit that. And also call mom back. She called twice.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Renew car registration online",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-31T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Pick up prescription from Walgreens",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Submit expense report",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-29T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Call mom back",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [
+      {
+        "title": "Call with the accountant",
+        "start_datetime": "2026-06-01T09:00:00-07:00",
+        "start_datetime_window": null,
+        "duration_minutes": null,
+        "location": null,
+        "attendees": [],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": ["Mom called twice"]
+  }
+}

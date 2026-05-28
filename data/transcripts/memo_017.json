@@ -1,0 +1,26 @@
+{
+  "id": "memo_017",
+  "transcript": "Grocery run. Eggs, milk, sourdough, and the good olive oil from the Italian section. Also need to swing by by the dry cleaner on Oak Street to pick up my suit, it should be ready by now.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Grocery run (eggs, milk, sourdough, olive oil from the Italian section)",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Pick up suit from dry cleaner on Oak Street",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

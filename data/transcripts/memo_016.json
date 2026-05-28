@@ -1,0 +1,40 @@
+{
+  "id": "memo_016",
+  "transcript": "Before the sprint ends Friday, finish the API documentation, review Jake's pull request, and update the project board. Also, remind me to send the weekly status update to the director by Thursday noon.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Finish the API documentation",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Review Jake's pull request",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Update the project board",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Send the weekly status update to the director",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T12:00:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

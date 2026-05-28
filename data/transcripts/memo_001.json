@@ -1,0 +1,19 @@
+{
+  "id": "memo_001",
+  "transcript": "Remind me to call the dentist tomorrow at 2pm. I need to schedule a cleaning.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "call the dentist",
+        "due_date": "2026-05-27T14:00:00-07:00",
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

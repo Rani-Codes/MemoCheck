@@ -1,0 +1,20 @@
+{
+  "id": "memo_003",
+  "transcript": "Coffee meeting with Sarah next Tuesday at 10am at Blue Bottle on Market Street. Don't want to forget that one.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Coffee meeting with Sarah",
+        "start_datetime": "2026-06-02T10:00:00-07:00",
+        "duration_minutes": null,
+        "location": "Blue Bottle on Market Street",
+        "attendees": ["Sarah"],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}

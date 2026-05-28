@@ -1,0 +1,26 @@
+{
+  "id": "memo_008",
+  "transcript": "I gotta get that proposal sent to the client next Thursday at the latest. Remind me on Wednesday so I have time to review it first.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Send proposal to the client",
+        "due_date": null,
+        "due_date_window": {"end": "2026-06-04T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Review the proposal",
+        "due_date": null,
+        "due_date_window": {"end": "2026-06-03T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

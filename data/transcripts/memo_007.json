@@ -1,0 +1,21 @@
+{
+  "id": "memo_007",
+  "transcript": "Team Retrospective is Friday at 2pm in the main conference room. Alex, Jordan, and Sam all need to be there.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Team retrospective",
+        "start_datetime": "2026-05-29T14:00:00-07:00",
+        "start_datetime_window": null,
+        "duration_minutes": null,
+        "location": "main conference room",
+        "attendees": ["Alex", "Jordan", "Sam"],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}

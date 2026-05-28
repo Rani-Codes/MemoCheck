@@ -1,0 +1,19 @@
+{
+  "id": "memo_011",
+  "transcript": "I need to get the updated contract over to Michael Chen before end of day. He's been waiting on it since Monday.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Get the updated contract over to Michael Chen",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-26T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "memo_012",
+  "transcript": "Three things from that meeting. Tell Kevin the kickoff is moved to Thursday. Ask Rachel if she can cover Tuesday afternoon. And I need to send Tom the invoice. That one's on me.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Tell Kevin the kickoff is moved to Thursday",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Ask Rachel if she can cover Tuesday afternoon",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Send Tom the invoice",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": []
+  }
+}

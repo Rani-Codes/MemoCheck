@@ -1,0 +1,19 @@
+{
+  "id": "memo_015",
+  "transcript": "I think there might be a doctor's appointment next week. Maybe Tuesday. I'm not totally sure. I should probably check with the office to confirm.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Check with the doctor's office about the appointment next week",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [],
+    "reminders": [],
+    "notes": ["Possibly a doctor's appointment next week, maybe Tuesday"]
+  }
+}

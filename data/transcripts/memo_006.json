@@ -1,0 +1,36 @@
+{
+  "id": "memo_006",
+  "transcript": "Okay, three things. Dentist appointment is confirmed for Tuesday at 3 p.m. Remind me to uh pay the credit card bill before Friday. And I still need to buy a birthday card for mom.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [
+      {
+        "description": "Pay the credit card bill",
+        "due_date": null,
+        "due_date_window": {"end": "2026-05-28T23:59:00-07:00"},
+        "assignee": null,
+        "negated": false
+      },
+      {
+        "description": "Buy a birthday card for mom",
+        "due_date": null,
+        "due_date_window": null,
+        "assignee": null,
+        "negated": false
+      }
+    ],
+    "events": [
+      {
+        "title": "Dentist appointment",
+        "start_datetime": "2026-06-02T15:00:00-07:00",
+        "start_datetime_window": null,
+        "duration_minutes": null,
+        "location": null,
+        "attendees": [],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}

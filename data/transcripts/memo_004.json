@@ -1,0 +1,11 @@
+{
+  "id": "memo_004",
+  "transcript": "Just a note to myself, the back door lock is sticking again. Not urgent, but good to be aware of.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [],
+    "reminders": [],
+    "notes": ["The back door lock is sticking again. Not urgent."]
+  }
+}

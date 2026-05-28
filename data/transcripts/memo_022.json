@@ -1,0 +1,21 @@
+{
+  "id": "memo_022",
+  "transcript": "Okay, so the team meeting is at 3. No wait, 3.30 on Thursday in the small conference room.",
+  "memo_recorded_at": "2026-05-26T15:14:14-07:00",
+  "ground_truth": {
+    "todos": [],
+    "events": [
+      {
+        "title": "Team meeting",
+        "start_datetime": "2026-05-28T15:30:00-07:00",
+        "start_datetime_window": null,
+        "duration_minutes": null,
+        "location": "small conference room",
+        "attendees": [],
+        "negated": false
+      }
+    ],
+    "reminders": [],
+    "notes": []
+  }
+}
