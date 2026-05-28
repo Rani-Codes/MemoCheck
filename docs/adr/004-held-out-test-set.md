@@ -33,3 +33,18 @@ Every metric is reported as three v0 vs v1 deltas, each with its own 95% bootstr
 ### Trade-off accepted
 
 A final comparison on N=6 is statistically noisier than N=30 and may show a smaller or even negative delta. This is the correct trade-off because a small but methodologically clean improvement is more credible than a large overfit one.
+
+### Locked held-out IDs
+
+The 6 held-out cases are:
+
+| ID | Category (primary) | Why this case |
+|---|---|---|
+| memo_001 | type_classification | Baseline "remind me to {verb}" → Todo case. Tests whether the type-classification rule generalizes off the visible-24 examples (memo_019 remains visible). |
+| memo_005 | multi_action | Simple two-item EOD case. Tests the basic multi-action + today-window pattern off-distribution from visible-24. |
+| memo_009 | vague_dates | Pure open-week window ("sometime next week"). Tests `due_date_window` generalization (memos 008, 010 remain visible). |
+| memo_011 | assignee_semantics | First-person action with named recipient → `assignee = null`. Tests the baseline assignee rule (memos 012, 018 remain visible). |
+| memo_016 | multi_action | Mid-complexity sprint deliverables, also exercises "remind me to send" type_classification. Tests both rules in one case. |
+| memo_022 | negation_false_positive | Self-correction of value ("3, no wait, 3:30") — `negated = false`. Tests that v1 does not over-fire on negation (synth_008 remains visible). |
+
+Every primary category in this held-out set has at least one remaining case in visible-24, so v1 prompt design has signal for each failure mode the held-out 6 exercise. The runtime gating list lives at `data/held_out_ids.txt`; the runner reads it to filter v0 / visible-24 batches.
