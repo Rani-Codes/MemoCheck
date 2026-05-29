@@ -169,7 +169,7 @@ def main() -> None:
         else:
             buckets["<0.55"] += 1
     print(f"  best-cosine buckets: {buckets}")
-    print(f"  (any >=0.80 here would indicate a possible threshold/assignment miss)\n")
+    print("  (any >=0.80 here would indicate a possible threshold/assignment miss)\n")
     shown = [h for h in hallucinations if h["best_cos"] >= DETAIL_COS]
     print(f"  --- detail for best_cos >= {DETAIL_COS} ({len(shown)} items) ---")
     for i, h in enumerate(shown, 1):

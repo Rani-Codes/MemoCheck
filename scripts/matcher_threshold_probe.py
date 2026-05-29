@@ -84,7 +84,7 @@ def main() -> None:
                 genuine_extras += 1
 
     print("## A. HALLUCINATION DECOMPOSITION (live threshold 0.80)")
-    print(f"  total hallucinations:        63")
+    print("  total hallucinations:        63")
     print(f"  genuine extras (nearest GT already matched): {genuine_extras}")
     print(f"  mutual-orphan false negatives (should have paired): {len(mutual_orphans)}")
     mo_cos = sorted((c for *_, c in mutual_orphans), reverse=True)
