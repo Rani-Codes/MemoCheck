@@ -16,7 +16,7 @@ from typing import Any, Callable, Optional
 
 from memocheck.agent.extractor import extract
 from memocheck.agent.schema import ExtractionError, ExtractionResult
-from memocheck.evals.matcher import match
+from memocheck.evals.matcher import Judge, match
 from memocheck.evals.schema import TestCase
 from memocheck.evals.scorer import CaseScore, score_case
 
@@ -48,6 +48,7 @@ def run_case(
     model: str,
     system_prompt: str,
     extractor: ExtractorFn = extract,
+    judge: Optional[Judge] = None,
 ) -> CaseResult:
     extraction = extractor(
         transcript=test_case.transcript,
@@ -61,7 +62,8 @@ def run_case(
             extraction=extraction,
             score=None,
         )
-    match_result = match(test_case.ground_truth, extraction.output)
+    # Judged band (ADR-002): the judge adjudicates ambiguous-cosine pairs.
+    match_result = match(test_case.ground_truth, extraction.output, judge=judge)
     # Localize naive agent datetimes to the memo's offset before scoring (ADR-003).
     return CaseResult(
         test_case_id=test_case.id,
@@ -87,8 +89,9 @@ def run_batch(
     count_fn: Optional[CountFn] = None,
     insert_fn: Optional[InsertFn] = None,
     progress: Optional[ProgressFn] = print,
+    judge_factory: Optional[Callable[[str], Judge]] = None,
 ) -> None:
-    """Iterate (provider × case × attempt), executing only missing slots.
+    """Iterate (provider x case x attempt), executing only missing slots.
 
     Resumability: an attempt 'slot' is filled iff there's a test_runs row with
     `error_message IS NULL` for that (provider, case). On rerun, only the
@@ -114,11 +117,15 @@ def run_batch(
             for i in range(target_attempts - already):
                 attempt_num = already + i + 1
                 done += 1
+                case_judge = (
+                    judge_factory(case.transcript) if judge_factory else None
+                )
                 result = run_case(
                     case,
                     model=prov.model,
                     system_prompt=system_prompt,
                     extractor=extractor,
+                    judge=case_judge,
                 )
                 _insert(
                     conn,

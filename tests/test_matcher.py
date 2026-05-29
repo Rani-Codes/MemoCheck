@@ -27,6 +27,23 @@ def fake_embedder(lookup: dict[str, list[float]]):
     return _embed
 
 
+def forbidden_judge(gt_text: str, agent_text: str) -> bool:
+    raise AssertionError(
+        f"judge must not be consulted for ({gt_text!r}, {agent_text!r})"
+    )
+
+
+def recording_judge(verdict: bool, calls: list[tuple[str, str]] | None = None):
+    """A judge returning a fixed verdict, optionally recording the pairs it sees."""
+
+    def _judge(gt_text: str, agent_text: str) -> bool:
+        if calls is not None:
+            calls.append((gt_text, agent_text))
+        return verdict
+
+    return _judge
+
+
 def test_flatten_preserves_type_and_back_pointer_across_all_three_types():
     todo = GroundTruthTodoItem(description="call the dentist")
     event = GroundTruthCalendarEvent(
@@ -356,3 +373,137 @@ def test_match_assigns_optimal_cross_pairing_via_hungarian():
     assert pairs == {("A", "B_prime"), ("B", "A_prime")}
     assert result.unmatched_gt == []
     assert result.unmatched_agent == []
+
+
+def test_match_above_ceiling_does_not_consult_judge():
+    """A pair at/above the auto-accept ceiling (0.80) is matched on cosine alone;
+    the judge is never consulted (it would just confirm the obvious)."""
+    gt = GroundTruthExtractedMemo(
+        todos=[GroundTruthTodoItem(description="call the dentist")]
+    )
+    agent = ExtractedMemo(todos=[TodoItem(description="ring the dentist")])
+    embedder = fake_embedder(
+        {"call the dentist": [1.0, 0.0], "ring the dentist": [1.0, 0.0]}
+    )
+
+    result = match(gt, agent, embedder=embedder, judge=forbidden_judge)
+
+    assert len(result.matched) == 1
+    assert result.unmatched_gt == []
+    assert result.unmatched_agent == []
+
+
+def test_match_in_band_judge_yes_pairs_and_is_consulted():
+    """A pair in the band [floor, ceiling) is matched iff the judge says yes.
+    The judge is consulted with (gt_label, agent_label)."""
+    gt = GroundTruthExtractedMemo(
+        todos=[GroundTruthTodoItem(description="book the campsite for the trip")]
+    )
+    agent = ExtractedMemo(todos=[TodoItem(description="book campsite")])
+    # cosine ~= 0.65, inside [0.50, 0.80)
+    embedder = fake_embedder(
+        {"book the campsite for the trip": [1.0, 0.0], "book campsite": [0.65, 0.76]}
+    )
+    calls: list[tuple[str, str]] = []
+
+    result = match(
+        gt, agent, embedder=embedder, judge=recording_judge(True, calls)
+    )
+
+    assert calls == [("book the campsite for the trip", "book campsite")]
+    assert len(result.matched) == 1
+    assert result.unmatched_gt == []
+    assert result.unmatched_agent == []
+
+
+def test_match_in_band_judge_no_leaves_both_orphan():
+    """Band pair the judge rejects: stays unmatched on both sides (one detection
+    miss + one hallucination), and the judge was consulted."""
+    gt = GroundTruthExtractedMemo(
+        todos=[GroundTruthTodoItem(description="review the proposal")]
+    )
+    agent = ExtractedMemo(todos=[TodoItem(description="send the proposal")])
+    embedder = fake_embedder(
+        {"review the proposal": [1.0, 0.0], "send the proposal": [0.65, 0.76]}
+    )
+    calls: list[tuple[str, str]] = []
+
+    result = match(gt, agent, embedder=embedder, judge=recording_judge(False, calls))
+
+    assert calls == [("review the proposal", "send the proposal")]
+    assert result.matched == []
+    assert [i.text for i in result.unmatched_gt] == ["review the proposal"]
+    assert [i.text for i in result.unmatched_agent] == ["send the proposal"]
+
+
+def test_match_below_floor_rejects_without_consulting_judge():
+    """Below the floor (0.50) a pair is auto-rejected; the judge is not consulted
+    (no point spending a call on an obviously unrelated pair)."""
+    gt = GroundTruthExtractedMemo(
+        todos=[GroundTruthTodoItem(description="email the landlord")]
+    )
+    agent = ExtractedMemo(todos=[TodoItem(description="renew car registration")])
+    # cosine ~= 0.30, below the floor
+    embedder = fake_embedder(
+        {"email the landlord": [1.0, 0.0], "renew car registration": [0.30, 0.954]}
+    )
+
+    result = match(gt, agent, embedder=embedder, judge=forbidden_judge)
+
+    assert result.matched == []
+    assert len(result.unmatched_gt) == 1
+    assert len(result.unmatched_agent) == 1
+
+
+def test_match_band_without_judge_is_rejected_backcompat():
+    """With no judge, a band pair is rejected, so match() collapses to the old
+    single-threshold behaviour. Guards every existing caller that passes no judge."""
+    gt = GroundTruthExtractedMemo(
+        todos=[GroundTruthTodoItem(description="book the campsite for the trip")]
+    )
+    agent = ExtractedMemo(todos=[TodoItem(description="book campsite")])
+    embedder = fake_embedder(
+        {"book the campsite for the trip": [1.0, 0.0], "book campsite": [0.65, 0.76]}
+    )
+
+    result = match(gt, agent, embedder=embedder)  # no judge
+
+    assert result.matched == []
+    assert len(result.unmatched_gt) == 1
+    assert len(result.unmatched_agent) == 1
+
+
+def test_match_consults_judge_only_for_band_pairs():
+    """Mixed case: one pair above the ceiling (auto), one in the band (judged),
+    one below the floor (auto-reject). The judge is consulted exactly once, on
+    the band pair only."""
+    gt = GroundTruthExtractedMemo(
+        todos=[
+            GroundTruthTodoItem(description="A"),
+            GroundTruthTodoItem(description="B"),
+            GroundTruthTodoItem(description="C"),
+        ]
+    )
+    agent = ExtractedMemo(
+        todos=[
+            TodoItem(description="A2"),
+            TodoItem(description="B2"),
+            TodoItem(description="C2"),
+        ]
+    )
+    embedder = fake_embedder(
+        {
+            "A": [1.0, 0.0, 0.0, 0.0], "A2": [1.0, 0.0, 0.0, 0.0],   # cos 1.00 auto
+            "B": [0.0, 1.0, 0.0, 0.0], "B2": [0.0, 0.65, 0.76, 0.0],  # cos 0.65 band
+            "C": [0.0, 0.0, 1.0, 0.0], "C2": [0.0, 0.0, 0.30, 0.954],  # cos 0.30 reject
+        }
+    )
+    calls: list[tuple[str, str]] = []
+
+    result = match(gt, agent, embedder=embedder, judge=recording_judge(True, calls))
+
+    assert calls == [("B", "B2")]
+    pairs = {(g.text, a.text) for g, a in result.matched}
+    assert pairs == {("A", "A2"), ("B", "B2")}
+    assert [i.text for i in result.unmatched_gt] == ["C"]
+    assert [i.text for i in result.unmatched_agent] == ["C2"]

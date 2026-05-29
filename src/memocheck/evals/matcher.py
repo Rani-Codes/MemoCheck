@@ -24,8 +24,11 @@ from memocheck.evals.schema import GroundTruthExtractedMemo
 
 ExtractedMemoLike = Union[ExtractedMemo, GroundTruthExtractedMemo]
 Embedder = Callable[[list[str]], np.ndarray]
+# (gt_label, agent_label) -> check are these the same underlying action item?
+Judge = Callable[[str, str], bool]
 
-DEFAULT_THRESHOLD = 0.8
+DEFAULT_THRESHOLD = 0.8  # auto-accept ceiling: at/above this, pair on cosine alone
+DEFAULT_JUDGE_FLOOR = 0.5  # auto-reject floor: below this, never a match (see ADR-002)
 
 
 @dataclass
@@ -85,7 +88,9 @@ def match(
     agent: ExtractedMemo,
     *,
     threshold: float = DEFAULT_THRESHOLD,
+    judge_floor: float = DEFAULT_JUDGE_FLOOR,
     embedder: Embedder | None = None,
+    judge: Judge | None = None,
 ) -> MatchResult:
     gt_items = flatten(gt)
     agent_items = flatten(agent)
@@ -111,7 +116,17 @@ def match(
     matched_gt_idx: set[int] = set()
     matched_agent_idx: set[int] = set()
     for r, c in zip(row_ind, col_ind):
-        if sim[r, c] >= threshold:
+        score = float(sim[r, c])
+        # Auto-accept above the ceiling; auto-reject below the floor; in the
+        # band between, defer to the judge (ADR-002). With no judge the band is
+        # rejected, so behaviour collapses to the old single-threshold matcher.
+        if score >= threshold:
+            accept = True
+        elif score >= judge_floor and judge is not None:
+            accept = judge(gt_items[r].text, agent_items[c].text)
+        else:
+            accept = False
+        if accept:
             matched.append((gt_items[r], agent_items[c]))
             matched_gt_idx.add(r)
             matched_agent_idx.add(c)

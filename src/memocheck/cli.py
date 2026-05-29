@@ -99,6 +99,16 @@ def run(
     import psycopg
 
     from memocheck.db.persistence import apply_schema
+    from memocheck.evals.judge import JudgeCache, make_judge
+    from memocheck.evals.matcher import Judge
+
+    # One persisted judge cache across the batch: band verdicts are reused across
+    # providers/attempts and survive resumed runs, so the judge is called at most
+    # once per distinct (model, gt_label, agent_label) pair (ADR-002).
+    judge_cache = JudgeCache(Path("data/judge_cache.json"))
+
+    def judge_factory(transcript: str) -> Judge:
+        return make_judge(transcript, cache=judge_cache)
 
     typer.echo(
         f"agent_version={agent_version} slice={case_slice} "
@@ -115,6 +125,7 @@ def run(
             system_prompt=system_prompt,
             target_attempts=attempts,
             conn=conn,
+            judge_factory=judge_factory,
         )
 
 
