@@ -2,8 +2,16 @@ from __future__ import annotations
 
 import re
 import time
+from typing import Any
 
 import litellm
+from litellm.exceptions import (
+    APIConnectionError,
+    InternalServerError,
+    RateLimitError,
+    ServiceUnavailableError,
+    Timeout,
+)
 from pydantic import ValidationError
 
 from memocheck.agent.schema import (
@@ -11,6 +19,46 @@ from memocheck.agent.schema import (
     ExtractionError,
     ExtractionResult,
 )
+
+# Transient API failures worth retrying with backoff (notably free-tier rate
+# limits like Groq's 12k tokens/min). Non-retryable errors (auth, bad request)
+# fall through to the ExtractionError path immediately.
+_RETRYABLE_ERRORS = (
+    RateLimitError,
+    APIConnectionError,
+    Timeout,
+    InternalServerError,
+    ServiceUnavailableError,
+)
+
+
+def _completion_with_backoff(
+    model: str,
+    messages: list[dict[str, str]],
+    *,
+    max_retries: int = 6,
+    base_delay: float = 2.0,
+    max_delay: float = 30.0,
+) -> Any:
+    """`litellm.completion` with exponential backoff on transient/rate-limit errors.
+
+    The backoff budget (~90s over the default 6 retries) spans more than a
+    minute, long enough for a per-minute token cap to reset. A request that still
+    fails is raised, becomes an ExtractionError, and is resumed later by the
+    runner. `timeout` also prevents an indefinite hang on a dead socket (e.g.
+    after the laptop sleeps mid-run).
+    """
+    delay = base_delay
+    for attempt in range(max_retries + 1):
+        try:
+            return litellm.completion(
+                model=model, messages=messages, temperature=0, timeout=60
+            )
+        except _RETRYABLE_ERRORS:
+            if attempt == max_retries:
+                raise
+            time.sleep(delay)
+            delay = min(delay * 2, max_delay)
 
 
 def _strip_markdown(content: str) -> str:
@@ -39,11 +87,7 @@ def extract(
     raw_response = ""
 
     try:
-        response = litellm.completion(
-            model=model,
-            messages=messages,
-            temperature=0,
-        )
+        response = _completion_with_backoff(model, messages)
         total_cost += litellm.completion_cost(response, model=model)
         raw_response = response.choices[0].message.content
 
@@ -68,11 +112,7 @@ def extract(
             )
             messages.append({"role": "user", "content": error_msg})
 
-            retry_response = litellm.completion(
-                model=model,
-                messages=messages,
-                temperature=0,
-            )
+            retry_response = _completion_with_backoff(model, messages)
             total_cost += litellm.completion_cost(retry_response, model=model)
             raw_response = retry_response.choices[0].message.content
 
