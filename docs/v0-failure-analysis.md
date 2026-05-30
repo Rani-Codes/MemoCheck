@@ -3,7 +3,8 @@
 Read-only analysis of the v0 run to identify the top failure modes that drive v1 prompt
 design. **No held-out data was opened or run.** Visible-24 slice only, per ADR-004.
 
-**Scoring note:** these numbers use the **judged-band matcher** (auto-accept cosine >= 0.80, auto-reject < 0.50, Claude Sonnet 4.6 judges in between), adopted after the
+**Scoring note:** these numbers use the **judged-band matcher** (auto-accept cosine
+`>= 0.80`, auto-reject `< 0.50`, Claude Sonnet 4.6 judges in between), adopted after the
 mandatory matcher spot-check. The earlier single-0.80-cutoff figures (detection 92.1%,
 hallucination 12.0%) were inflated/deflated by sub-threshold false negatives and are
 superseded here; see `docs/v0-matcher-validation.md` for the change and its rationale.
