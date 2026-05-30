@@ -3,8 +3,7 @@
 Read-only analysis of the v0 run to identify the top failure modes that drive v1 prompt
 design. **No held-out data was opened or run.** Visible-24 slice only, per ADR-004.
 
-**Scoring note:** these numbers use the **judged-band matcher** (auto-accept cosine
->= 0.80, auto-reject < 0.50, Claude Sonnet 4.6 judges in between), adopted after the
+**Scoring note:** these numbers use the **judged-band matcher** (auto-accept cosine >= 0.80, auto-reject < 0.50, Claude Sonnet 4.6 judges in between), adopted after the
 mandatory matcher spot-check. The earlier single-0.80-cutoff figures (detection 92.1%,
 hallucination 12.0%) were inflated/deflated by sub-threshold false negatives and are
 superseded here; see `docs/v0-matcher-validation.md` for the change and its rationale.
@@ -137,6 +136,38 @@ Per-category, pooled providers (above 0 only):
 - **One intent split into multiple items** (`type_classification` 42.9%: a Reminder *and*
   a Todo for "set a reminder to cancel X"; `calendar_event_full` 20%: a "don't want to
   forget" Reminder on top of the matched Event). Worst on GPT-4.1 mini (10.8%).
+
+## What the judged-band re-score changed vs the first-pass analysis
+
+The first-pass analysis scored at the single 0.80 cutoff and reached three conclusions the
+judged band overturns. The mechanism: the judge created almost no new errors and erased
+almost none; it **re-attributed** errors to the correct metric. At 0.80, an item the agent
+captured but emitted with the wrong type (or failed to mark `negated`) was a paraphrase of
+a GT item scoring just under 0.80, so it was discarded as a hallucination (and its GT twin
+as a detection miss) before ever reaching Tier 2/3. The band now matches those pairs, so
+they leave the hallucination bucket and get scored on type and negation, where some fail.
+
+| First-pass conclusion (0.80 cutoff) | After the judged-band re-score |
+|---|---|
+| Hallucination 12.0%, a top-2 failure mode | 6.5%; roughly half was a measurement artifact. The real signal is over-production. |
+| Type accuracy 97.0%, "not a lever" | 94.7% and the **#2 lever**; the mis-typed items were hiding in the hallucination bucket. |
+| Negation fully solved (100%, 0 FP/FN), skip it | 99.4% with one genuine retraction miss (synth_003, Groq), previously discarded as a hallucination. |
+| Date accuracy ~79.8%, #1 | 80.5%, still #1 and essentially unchanged; the top target is robust to the scoring fix. |
+
+Three things to carry into v1 design:
+
+- **Typing and over-production share a root cause** (the agent emits the right action as
+  the wrong type or as an extra item), so a single prompt fix on intent-type rules plus
+  "one intent = one item / passive observation -> notes" should move both metrics. Fixing
+  typing will also shrink the apparent hallucination number.
+- **Anthropic Haiku is the typing laggard** (type 90.2%, date 73.0%), which the 0.80 cutoff
+  hid. Since the prompt is shared, Haiku's type-accuracy delta is the cleanest signal that
+  a typing fix landed.
+- **Score v0 and v1 through the same judged band and shared judge cache**, or the deltas
+  mix agent change with scoring change. The judge is permissive by design (it accepted all
+  10 v0 band pairs, including two borderline 0.687 ones), which is what pushes these errors
+  into the type/negation buckets rather than detection/hallucination; note this in the
+  writeup so the metric movements stay interpretable.
 
 ## Implications for v1 (design happens next, not here)
 
