@@ -183,7 +183,7 @@ def report(
         Path("docs/test-set-composition.md"),
         help="source of case_id -> category for the per-category breakdown",
     ),
-    out: Path = typer.Option(Path("data/results/report.json")),
+    out: Path = typer.Option(Path("data/results/v0_vs_v1.json")),
     seed: int = typer.Option(0, help="bootstrap RNG seed (reproducible CIs)"),
     n_resamples: int = typer.Option(1000, help="bootstrap resamples per ADR-005"),
 ) -> None:
@@ -230,6 +230,10 @@ def report(
     )
     payload = report_to_payload(
         rep,
+        # fixed to the v0 -> v1 comparison for now; becomes --baseline/--candidate
+        # flags if a v2 is added (the loader/DB are already version-agnostic).
+        baseline="v0",
+        candidate="v1",
         generated_at=datetime.now(timezone.utc).isoformat(),
         seed=seed,
         n_resamples=n_resamples,

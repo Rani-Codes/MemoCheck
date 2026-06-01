@@ -16,6 +16,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from memocheck.agent.schema import ExtractionError
+from memocheck.evals.report import MetricRecord, responded
 from memocheck.evals.runner import CaseResult
 from memocheck.evals.scorer import CaseScore
 
@@ -48,6 +49,69 @@ def count_successful_attempts(
             (agent_version,),
         )
         return {(provider, case_id): n for provider, case_id, n in cur.fetchall()}
+
+
+def load_metric_records(
+    conn: psycopg.Connection, *, versions: tuple[str, ...] = ("v0", "v1")
+) -> list[MetricRecord]:
+    """Load per-(version, provider, metric, case) counts for the report.
+
+    The 8 matcher metrics come from `metric_scores` (summed across the 3
+    attempts). `schema_adherence` is derived from `test_runs` instead: its
+    numerator is the count of first-attempt-valid runs and its denominator is
+    the count of runs where the model actually responded (network/infra
+    failures excluded via `responded`), per the standing decision. The
+    `metric_scores` copy of schema_adherence is ignored because it is biased
+    (only written for successful extractions).
+    """
+    records: list[MetricRecord] = []
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT t.agent_version, t.provider, m.metric_name, t.test_case_id,
+                   SUM(m.numerator), SUM(m.denominator)
+            FROM metric_scores m
+            JOIN test_runs t ON t.id = m.test_run_id
+            WHERE m.metric_name <> 'schema_adherence'
+              AND t.agent_version = ANY(%s)
+            GROUP BY t.agent_version, t.provider, m.metric_name, t.test_case_id
+            """,
+            (list(versions),),
+        )
+        for version, provider, metric, case_id, num, den in cur.fetchall():
+            records.append(
+                MetricRecord(version, provider, metric, case_id, int(num), int(den))
+            )
+
+        # schema_adherence from test_runs: valid / responded per (version,
+        # provider, case). Aggregated in Python so the responded() rule (the
+        # standing decision) lives in exactly one place.
+        cur.execute(
+            """
+            SELECT agent_version, provider, test_case_id, schema_valid, error_message
+            FROM test_runs
+            WHERE agent_version = ANY(%s)
+            """,
+            (list(versions),),
+        )
+        valid: dict[tuple[str, str, str], int] = {}
+        responded_n: dict[tuple[str, str, str], int] = {}
+        for version, provider, case_id, schema_valid, error_message in cur.fetchall():
+            if not responded(error_message):
+                continue
+            key = (version, provider, case_id)
+            responded_n[key] = responded_n.get(key, 0) + 1
+            if schema_valid:
+                valid[key] = valid.get(key, 0) + 1
+
+    for key, den in responded_n.items():
+        version, provider, case_id = key
+        records.append(
+            MetricRecord(
+                version, provider, "schema_adherence", case_id, valid.get(key, 0), den
+            )
+        )
+    return records
 
 
 def case_score_to_metrics(
