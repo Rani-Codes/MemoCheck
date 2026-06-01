@@ -2,11 +2,16 @@
   "anthropic/claude-sonnet-4-6\u001fBook the campsite for the Lake Tahoe camping trip\u001fbook the campsite": true,
   "anthropic/claude-sonnet-4-6\u001fCoffee meeting with Rebecca\u001fCoffee meeting": true,
   "anthropic/claude-sonnet-4-6\u001fLake Tahoe camping trip\u001fcamping trip": true,
+  "anthropic/claude-sonnet-4-6\u001fPick up the dry cleaning\u001fPick up the dry cleaning before 18:00 on 2026-05-29": true,
   "anthropic/claude-sonnet-4-6\u001fPick up the dry cleaning\u001fPick up the dry cleaning before 6pm": true,
   "anthropic/claude-sonnet-4-6\u001fReview the proposal\u001fReview proposal before sending": true,
   "anthropic/claude-sonnet-4-6\u001fReview the proposal\u001fReview proposal before sending to client": true,
+  "anthropic/claude-sonnet-4-6\u001fSend out the meeting recap from this morning\u001fsend out the meeting recap from this morning and push my branch to the repo": false,
   "anthropic/claude-sonnet-4-6\u001fSet up customer interviews for next month\u001fCustomer interviews": true,
+  "anthropic/claude-sonnet-4-6\u001fcall the dentist\u001fCall the dentist to schedule a cleaning": true,
+  "anthropic/claude-sonnet-4-6\u001fcall the dentist\u001fcall the dentist to schedule a cleaning": true,
   "anthropic/claude-sonnet-4-6\u001fparents' flight lands at 9am\u001fset up reminder for parents' flight": true,
   "anthropic/claude-sonnet-4-6\u001fpick up a new HDMI cable\u001fPick up a new HDMI cable, probably order it online": true,
-  "anthropic/claude-sonnet-4-6\u001fpick up a new HDMI cable\u001fpick up a new HDMI cable, probably order it online": true
+  "anthropic/claude-sonnet-4-6\u001fpick up a new HDMI cable\u001fpick up a new HDMI cable, probably order it online": true,
+  "anthropic/claude-sonnet-4-6\u001fproduct demo\u001fproduct demo on Thursday at 2pm in the boardroom": true
 }
