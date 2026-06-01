@@ -26,8 +26,8 @@ def test_bootstrap_zero_variance_collapses_ci_to_point_delta():
     v0 = {"a": (1, 2), "b": (1, 2)}
     v1 = {"a": (2, 2), "b": (2, 2)}
     r = bootstrap_delta_ci(v0, v1, ["a", "b"], n_resamples=200, seed=0)
-    assert r.v0 == 0.5
-    assert r.v1 == 1.0
+    assert r.baseline == 0.5
+    assert r.candidate == 1.0
     assert r.delta == 0.5
     assert r.ci_low == 0.5
     assert r.ci_high == 0.5
@@ -49,7 +49,7 @@ def test_bootstrap_undefined_when_all_denominators_zero():
     v0 = {"a": (0, 0)}
     v1 = {"a": (0, 0)}
     r = bootstrap_delta_ci(v0, v1, ["a"])
-    assert r.v0 is None and r.v1 is None and r.delta is None
+    assert r.baseline is None and r.candidate is None and r.delta is None
     assert r.ci_low is None and r.ci_high is None
 
 
@@ -78,6 +78,8 @@ def test_build_report_assembles_slices_metrics_and_breakdowns():
     ]
     rep = build_report(
         recs,
+        baseline="v0",
+        candidate="v1",
         categories={"c1": "alpha", "c2": "alpha", "c3": "beta"},
         held_out_ids={"c3"},
         n_resamples=200,
@@ -86,23 +88,23 @@ def test_build_report_assembles_slices_metrics_and_breakdowns():
 
     assert rep.metrics == ["detection_rate"]
 
-    # visible = c1,c2: v0 = (1+1)/(2+2) = 0.5, v1 = 1.0, delta = 0.5
+    # visible = c1,c2: baseline = (1+1)/(2+2) = 0.5, candidate = 1.0, delta = 0.5
     vis = rep.slices["visible"]["detection_rate"]
-    assert (vis.v0, vis.v1, vis.delta, vis.n_cases) == (0.5, 1.0, 0.5, 2)
+    assert (vis.baseline, vis.candidate, vis.delta, vis.n_cases) == (0.5, 1.0, 0.5, 2)
 
-    # held_out = c3: v0 = 0/2 = 0.0, v1 = 1/2 = 0.5
+    # held_out = c3: baseline = 0/2 = 0.0, candidate = 1/2 = 0.5
     ho = rep.slices["held_out"]["detection_rate"]
-    assert (ho.v0, ho.v1, ho.n_cases) == (0.0, 0.5, 1)
+    assert (ho.baseline, ho.candidate, ho.n_cases) == (0.0, 0.5, 1)
 
     # all = 3 cases pooled
     al = rep.slices["all"]["detection_rate"]
     assert al.n_cases == 3
-    assert al.v0 == 2 / 6 and al.v1 == 5 / 6
+    assert al.baseline == 2 / 6 and al.candidate == 5 / 6
 
     # per-category point table (all-30): alpha = c1,c2
     assert rep.by_category["alpha"]["detection_rate"].delta == 0.5
     # per-provider point table (all-30): provider p over all 3 cases
-    assert rep.by_provider["p"]["detection_rate"].v1 == 5 / 6
+    assert rep.by_provider["p"]["detection_rate"].candidate == 5 / 6
 
 
 def test_build_report_pools_providers_and_attaches_ci_to_slices():
@@ -178,3 +180,56 @@ def test_report_to_payload_is_json_serializable_with_metadata():
     assert set(payload["slices"]) == {"visible", "held_out", "all"}
     assert payload["slices"]["all"]["detection_rate"]["delta"] == 0.5
     assert "by_provider" in payload and "by_category" in payload
+
+
+def test_build_report_is_version_agnostic_for_baseline_candidate():
+    # The pipeline must compare any two versions, not just v0/v1, so a v1 -> v2
+    # report pulls v1 as baseline and v2 as candidate and exposes them under
+    # generic .baseline / .candidate fields.
+    recs = [
+        MetricRecord("v1", "p", "date_accuracy", "c1", 1, 2),
+        MetricRecord("v2", "p", "date_accuracy", "c1", 2, 2),
+    ]
+    rep = build_report(
+        recs,
+        baseline="v1",
+        candidate="v2",
+        categories={"c1": "alpha"},
+        held_out_ids=set(),
+        n_resamples=100,
+        seed=0,
+    )
+    d = rep.slices["all"]["date_accuracy"]
+    assert d.baseline == 0.5  # v1
+    assert d.candidate == 1.0  # v2
+    assert d.delta == 0.5
+    assert rep.by_provider["p"]["date_accuracy"].baseline == 0.5
+    assert rep.by_category["alpha"]["date_accuracy"].candidate == 1.0
+
+
+def test_report_to_payload_records_arbitrary_baseline_candidate():
+    recs = [
+        MetricRecord("v1", "p", "date_accuracy", "c1", 1, 2),
+        MetricRecord("v2", "p", "date_accuracy", "c1", 2, 2),
+    ]
+    rep = build_report(
+        recs,
+        baseline="v1",
+        candidate="v2",
+        categories={"c1": "alpha"},
+        held_out_ids=set(),
+        n_resamples=50,
+        seed=0,
+    )
+    payload = report_to_payload(
+        rep,
+        baseline="v1",
+        candidate="v2",
+        generated_at="2026-06-01T00:00:00Z",
+        seed=0,
+        n_resamples=50,
+    )
+    json.dumps(payload)  # must not raise
+    assert payload["baseline"] == "v1" and payload["candidate"] == "v2"
+    cell = payload["slices"]["all"]["date_accuracy"]
+    assert cell["baseline"] == 0.5 and cell["candidate"] == 1.0

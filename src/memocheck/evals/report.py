@@ -1,5 +1,5 @@
 """
-v0 -> v1 comparison report (CLI `memocheck report`, step 9).
+baseline -> candidate comparison report (CLI `memocheck report`, step 9).
 
 Pure aggregation + paired-bootstrap core over the per-case counts persisted in
 Postgres. Micro-averaged (SUM(numerator)/SUM(denominator)) so cases with
@@ -67,14 +67,15 @@ def responded(error_message: str | None) -> bool:
 
 @dataclass(frozen=True)
 class DeltaResult:
-    """One v0 -> v1 comparison: point scores, the delta, and its bootstrap CI.
+    """One baseline -> candidate comparison: point scores, the delta, and its
+    bootstrap CI.
 
     Any field is None when the metric is undefined for this set of cases (the
     pooled denominator is 0, e.g. a slice with no items of this metric's kind).
     """
 
-    v0: float | None
-    v1: float | None
+    baseline: float | None
+    candidate: float | None
     delta: float | None
     ci_low: float | None
     ci_high: float | None
@@ -82,28 +83,28 @@ class DeltaResult:
 
 
 def bootstrap_delta_ci(
-    v0_by_case: Mapping[str, tuple[int, int]],
-    v1_by_case: Mapping[str, tuple[int, int]],
+    baseline_by_case: Mapping[str, tuple[int, int]],
+    candidate_by_case: Mapping[str, tuple[int, int]],
     case_ids: Sequence[str],
     *,
     n_resamples: int = 1000,
     seed: int = 0,
     ci: float = 0.95,
 ) -> DeltaResult:
-    """Paired bootstrap CI for the v1 - v0 micro-average delta (ADR-005).
+    """Paired bootstrap CI for the candidate - baseline micro-average delta (ADR-005).
 
-    `v0_by_case` / `v1_by_case` map case_id -> (numerator, denominator) already
-    pooled across providers and attempts. The comparison is paired: the same
-    resampled case_ids index both versions every iteration, preserving the
-    case-level pairing. A resample whose pooled denominator is 0 on either side
-    is skipped (its delta is undefined). The CI is the [2.5, 97.5] percentiles
-    of the resampled deltas. Deterministic for a fixed `seed`.
+    `baseline_by_case` / `candidate_by_case` map case_id -> (numerator,
+    denominator) already pooled across providers and attempts. The comparison is
+    paired: the same resampled case_ids index both versions every iteration,
+    preserving the case-level pairing. A resample whose pooled denominator is 0
+    on either side is skipped (its delta is undefined). The CI is the [2.5, 97.5]
+    percentiles of the resampled deltas. Deterministic for a fixed `seed`.
     """
-    point_v0 = micro_average(v0_by_case[c] for c in case_ids)
-    point_v1 = micro_average(v1_by_case[c] for c in case_ids)
+    point_baseline = micro_average(baseline_by_case[c] for c in case_ids)
+    point_candidate = micro_average(candidate_by_case[c] for c in case_ids)
     point_delta = (
-        point_v1 - point_v0
-        if point_v0 is not None and point_v1 is not None
+        point_candidate - point_baseline
+        if point_baseline is not None and point_candidate is not None
         else None
     )
 
@@ -116,10 +117,10 @@ def bootstrap_delta_ci(
         for _ in range(n_resamples):
             idx = rng.integers(0, n, n)
             sampled = [case_ids[i] for i in idx]
-            mv0 = micro_average(v0_by_case[c] for c in sampled)
-            mv1 = micro_average(v1_by_case[c] for c in sampled)
-            if mv0 is not None and mv1 is not None:
-                deltas.append(mv1 - mv0)
+            mb = micro_average(baseline_by_case[c] for c in sampled)
+            mc = micro_average(candidate_by_case[c] for c in sampled)
+            if mb is not None and mc is not None:
+                deltas.append(mc - mb)
         if deltas:
             lo_pct = 100 * (1 - ci) / 2
             hi_pct = 100 * (1 + ci) / 2
@@ -127,8 +128,8 @@ def bootstrap_delta_ci(
             ci_high = float(np.percentile(deltas, hi_pct))
 
     return DeltaResult(
-        v0=point_v0,
-        v1=point_v1,
+        baseline=point_baseline,
+        candidate=point_candidate,
         delta=point_delta,
         ci_low=ci_low,
         ci_high=ci_high,
@@ -167,12 +168,12 @@ class MetricRecord:
 
 @dataclass(frozen=True)
 class PointDelta:
-    """A v0 -> v1 point comparison with no CI (used for the per-provider and
-    per-category breakdowns, where N per group is too small for a meaningful
-    bootstrap)."""
+    """A baseline -> candidate point comparison with no CI (used for the
+    per-provider and per-category breakdowns, where N per group is too small for
+    a meaningful bootstrap)."""
 
-    v0: float | None
-    v1: float | None
+    baseline: float | None
+    candidate: float | None
     delta: float | None
     n_cases: int
 
@@ -186,28 +187,32 @@ class Report:
 
 
 def _point_delta(
-    v0_by_case: Mapping[str, tuple[int, int]],
-    v1_by_case: Mapping[str, tuple[int, int]],
+    baseline_by_case: Mapping[str, tuple[int, int]],
+    candidate_by_case: Mapping[str, tuple[int, int]],
     case_ids: Sequence[str],
 ) -> PointDelta:
-    v0 = micro_average(v0_by_case.get(c, (0, 0)) for c in case_ids)
-    v1 = micro_average(v1_by_case.get(c, (0, 0)) for c in case_ids)
-    delta = v1 - v0 if v0 is not None and v1 is not None else None
-    return PointDelta(v0=v0, v1=v1, delta=delta, n_cases=len(case_ids))
+    base = micro_average(baseline_by_case.get(c, (0, 0)) for c in case_ids)
+    cand = micro_average(candidate_by_case.get(c, (0, 0)) for c in case_ids)
+    delta = cand - base if base is not None and cand is not None else None
+    return PointDelta(baseline=base, candidate=cand, delta=delta, n_cases=len(case_ids))
 
 
 def build_report(
     records: Sequence[MetricRecord],
     *,
+    baseline: str,
+    candidate: str,
     categories: Mapping[str, str],
     held_out_ids: set[str],
     n_resamples: int = 1000,
     seed: int = 0,
 ) -> Report:
-    """Assemble the full v0 -> v1 comparison from per-case counts.
+    """Assemble the full baseline -> candidate comparison from per-case counts.
 
-    Three CI'd slices (visible / held_out / all, ADR-004) pooled across
-    providers, plus per-provider and per-category point tables on all-30.
+    `baseline` / `candidate` are the two agent versions to compare (e.g. "v0"
+    and "v1", or "v1" and "v2"); the records must contain rows for both. Three
+    CI'd slices (visible / held_out / all, ADR-004) pooled across providers,
+    plus per-provider and per-category point tables on all-30.
     """
     present = {r.metric for r in records}
     metrics = [m for m in METRIC_ORDER if m in present]
@@ -242,10 +247,10 @@ def build_report(
     for sname, ids in slice_ids.items():
         slices[sname] = {}
         for m in metrics:
-            v0c = {c: by_case("v0", m).get(c, (0, 0)) for c in ids}
-            v1c = {c: by_case("v1", m).get(c, (0, 0)) for c in ids}
+            basec = {c: by_case(baseline, m).get(c, (0, 0)) for c in ids}
+            candc = {c: by_case(candidate, m).get(c, (0, 0)) for c in ids}
             slices[sname][m] = bootstrap_delta_ci(
-                v0c, v1c, ids, n_resamples=n_resamples, seed=seed
+                basec, candc, ids, n_resamples=n_resamples, seed=seed
             )
 
     by_provider: dict[str, dict[str, PointDelta]] = {}
@@ -253,10 +258,10 @@ def build_report(
         p_cases = sorted({r.case_id for r in records if r.provider == p})
         by_provider[p] = {}
         for m in metrics:
-            v0 = micro_average([tuple(prov_pool.get(("v0", p, m), [0, 0]))])
-            v1 = micro_average([tuple(prov_pool.get(("v1", p, m), [0, 0]))])
-            delta = v1 - v0 if v0 is not None and v1 is not None else None
-            by_provider[p][m] = PointDelta(v0, v1, delta, len(p_cases))
+            base = micro_average([tuple(prov_pool.get((baseline, p, m), [0, 0]))])
+            cand = micro_average([tuple(prov_pool.get((candidate, p, m), [0, 0]))])
+            delta = cand - base if base is not None and cand is not None else None
+            by_provider[p][m] = PointDelta(base, cand, delta, len(p_cases))
 
     by_category: dict[str, dict[str, PointDelta]] = {}
     for cat in sorted({categories[c] for c in all_case_ids if c in categories}):
@@ -264,7 +269,7 @@ def build_report(
         by_category[cat] = {}
         for m in metrics:
             by_category[cat][m] = _point_delta(
-                by_case("v0", m), by_case("v1", m), cat_ids
+                by_case(baseline, m), by_case(candidate, m), cat_ids
             )
 
     return Report(
