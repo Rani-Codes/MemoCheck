@@ -11,7 +11,7 @@ import importlib
 import json
 import os
 from pathlib import Path
-from typing import get_args
+from typing import Optional, get_args
 
 import typer
 from dotenv import load_dotenv
@@ -144,50 +144,57 @@ def _fmt_ci(lo: float | None, hi: float | None) -> str:
     return f"[{lo:+.3f}, {hi:+.3f}]"
 
 
-def _print_report(rep) -> None:  # type: ignore[no-untyped-def]
-    typer.echo("v0 -> v1 deltas, pooled across providers (95% bootstrap CI)")
+def _print_report(rep, baseline: str, candidate: str) -> None:  # type: ignore[no-untyped-def]
     typer.echo(
-        f"{'metric':<24}{'slice':<10}{'v0':>7}{'v1':>7}{'delta':>8}  95% CI"
+        f"{baseline} -> {candidate} deltas, pooled across providers (95% bootstrap CI)"
+    )
+    typer.echo(
+        f"{'metric':<24}{'slice':<10}{baseline:>7}{candidate:>7}{'delta':>8}  95% CI"
     )
     for m in rep.metrics:
         for s in ("visible", "held_out", "all"):
             d = rep.slices[s][m]
             typer.echo(
-                f"{m:<24}{s:<10}{_fmt(d.v0):>7}{_fmt(d.v1):>7}"
+                f"{m:<24}{s:<10}{_fmt(d.baseline):>7}{_fmt(d.candidate):>7}"
                 f"{_fmt_delta(d.delta):>8}  {_fmt_ci(d.ci_low, d.ci_high)}"
             )
 
     typer.echo("\nper-provider, all-30 (point deltas, no CI)")
-    typer.echo(f"{'provider':<12}{'metric':<24}{'v0':>7}{'v1':>7}{'delta':>8}")
+    typer.echo(f"{'provider':<12}{'metric':<24}{baseline:>7}{candidate:>7}{'delta':>8}")
     for provider, metrics in rep.by_provider.items():
         for m, pd in metrics.items():
             typer.echo(
-                f"{provider:<12}{m:<24}{_fmt(pd.v0):>7}{_fmt(pd.v1):>7}"
+                f"{provider:<12}{m:<24}{_fmt(pd.baseline):>7}{_fmt(pd.candidate):>7}"
                 f"{_fmt_delta(pd.delta):>8}"
             )
 
     typer.echo("\nper-category, all-30 (point deltas, no CI)")
-    typer.echo(f"{'category':<26}{'metric':<24}{'v0':>7}{'v1':>7}{'delta':>8}")
+    typer.echo(f"{'category':<26}{'metric':<24}{baseline:>7}{candidate:>7}{'delta':>8}")
     for category, metrics in rep.by_category.items():
         for m, pd in metrics.items():
             typer.echo(
-                f"{category:<26}{m:<24}{_fmt(pd.v0):>7}{_fmt(pd.v1):>7}"
+                f"{category:<26}{m:<24}{_fmt(pd.baseline):>7}{_fmt(pd.candidate):>7}"
                 f"{_fmt_delta(pd.delta):>8}"
             )
 
 
 @app.command()
 def report(
+    baseline: str = typer.Option("v0", help="baseline agent version (e.g. v0, v1)"),
+    candidate: str = typer.Option("v1", help="candidate agent version (e.g. v1, v2)"),
     held_out_ids: Path = typer.Option(Path("data/held_out_ids.txt")),
     composition: Path = typer.Option(
         Path("docs/test-set-composition.md"),
         help="source of case_id -> category for the per-category breakdown",
     ),
-    out: Path = typer.Option(Path("data/results/v0_vs_v1.json")),
+    out: Optional[Path] = typer.Option(
+        None,
+        help="output JSON path (default: data/results/{baseline}_vs_{candidate}.json)",
+    ),
     seed: int = typer.Option(0, help="bootstrap RNG seed (reproducible CIs)"),
     n_resamples: int = typer.Option(1000, help="bootstrap resamples per ADR-005"),
 ) -> None:
-    """Aggregate v0 -> v1 deltas + bootstrap CIs from the DB (step 9).
+    """Aggregate baseline -> candidate deltas + bootstrap CIs from the DB (step 9).
 
     Deterministic and token-free. Schema Adherence is sourced from
     `test_runs.schema_valid` (network/infra failures excluded), not the biased
@@ -211,11 +218,14 @@ def report(
         typer.echo("DATABASE_URL not set", err=True)
         raise typer.Exit(1)
 
+    if out is None:
+        out = Path(f"data/results/{baseline}_vs_{candidate}.json")
+
     held = load_held_out_ids(held_out_ids)
     categories = parse_categories(composition.read_text())
 
     with psycopg.connect(db_url) as conn:
-        records = load_metric_records(conn)
+        records = load_metric_records(conn, versions=(baseline, candidate))
 
     if not records:
         typer.echo("no eval runs found; run `memocheck run` first", err=True)
@@ -223,6 +233,8 @@ def report(
 
     rep = build_report(
         records,
+        baseline=baseline,
+        candidate=candidate,
         categories=categories,
         held_out_ids=held,
         n_resamples=n_resamples,
@@ -230,10 +242,8 @@ def report(
     )
     payload = report_to_payload(
         rep,
-        # fixed to the v0 -> v1 comparison for now; becomes --baseline/--candidate
-        # flags if a v2 is added (the loader/DB are already version-agnostic).
-        baseline="v0",
-        candidate="v1",
+        baseline=baseline,
+        candidate=candidate,
         generated_at=datetime.now(timezone.utc).isoformat(),
         seed=seed,
         n_resamples=n_resamples,
@@ -241,7 +251,7 @@ def report(
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2))
 
-    _print_report(rep)
+    _print_report(rep, baseline, candidate)
     typer.echo(f"\nwrote {out}")
 
 

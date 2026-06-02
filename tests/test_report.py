@@ -119,19 +119,20 @@ def test_build_report_pools_providers_and_attaches_ci_to_slices():
         MetricRecord("v1", "q", "detection_rate", "c2", 1, 1),
     ]
     rep = build_report(
-        recs, categories={"c1": "a", "c2": "a"}, held_out_ids=set(),
+        recs, baseline="v0", candidate="v1",
+        categories={"c1": "a", "c2": "a"}, held_out_ids=set(),
         n_resamples=300, seed=1,
     )
 
     al = rep.slices["all"]["detection_rate"]
-    assert al.v0 == 2 / 6  # (1+0+1+0) / (2+2+1+1), pooled across providers
-    assert al.v1 == 5 / 6  # (2+1+1+1) / 6
+    assert al.baseline == 2 / 6  # (1+0+1+0) / (2+2+1+1), pooled across providers
+    assert al.candidate == 5 / 6  # (2+1+1+1) / 6
     assert al.ci_low is not None and al.ci_high is not None
     assert al.ci_low <= al.delta <= al.ci_high
 
     # the per-provider table keeps providers separate
-    assert rep.by_provider["q"]["detection_rate"].v0 == 0.0  # (0+0)/(2+1)
-    assert rep.by_provider["p"]["detection_rate"].v0 == 2 / 3  # (1+1)/(2+1)
+    assert rep.by_provider["q"]["detection_rate"].baseline == 0.0  # (0+0)/(2+1)
+    assert rep.by_provider["p"]["detection_rate"].baseline == 2 / 3  # (1+1)/(2+1)
 
 
 def test_parse_categories_reads_per_case_table_only():
@@ -160,7 +161,8 @@ def test_report_to_payload_is_json_serializable_with_metadata():
         MetricRecord("v1", "p", "detection_rate", "c1", 2, 2),
     ]
     rep = build_report(
-        recs, categories={"c1": "alpha"}, held_out_ids=set(),
+        recs, baseline="v0", candidate="v1",
+        categories={"c1": "alpha"}, held_out_ids=set(),
         n_resamples=50, seed=0,
     )
     payload = report_to_payload(
