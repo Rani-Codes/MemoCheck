@@ -1,0 +1,1702 @@
+{
+  "metrics": [
+    "detection_rate",
+    "hallucination_rate",
+    "type_accuracy",
+    "date_accuracy",
+    "attribution_accuracy",
+    "negation_handling",
+    "negation_false_positive",
+    "negation_false_negative",
+    "schema_adherence"
+  ],
+  "slices": {
+    "visible": {
+      "detection_rate": {
+        "baseline": 0.9583333333333334,
+        "candidate": 0.9662698412698413,
+        "delta": 0.007936507936507908,
+        "ci_low": 0.0,
+        "ci_high": 0.018115942028985477,
+        "n_cases": 24
+      },
+      "hallucination_rate": {
+        "baseline": 0.022267206477732792,
+        "candidate": 0.027944111776447105,
+        "delta": 0.005676905298714313,
+        "ci_low": -0.0002694535403901378,
+        "ci_high": 0.016741689334945752,
+        "n_cases": 24
+      },
+      "type_accuracy": {
+        "baseline": 0.9958592132505176,
+        "candidate": 0.9897330595482546,
+        "delta": -0.006126153702262993,
+        "ci_low": -0.021144891444223064,
+        "ci_high": 0.00011894950991513929,
+        "n_cases": 24
+      },
+      "date_accuracy": {
+        "baseline": 0.841995841995842,
+        "candidate": 0.7987551867219918,
+        "delta": -0.04324065527385024,
+        "ci_low": -0.10687617993630741,
+        "ci_high": 0.004535588261373231,
+        "n_cases": 24
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9752808988764045,
+        "candidate": 0.9730941704035875,
+        "delta": -0.002186728472816979,
+        "ci_low": -0.008101284659421696,
+        "ci_high": 0.00023489352917092598,
+        "n_cases": 24
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 24
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 24
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 24
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 24
+      }
+    },
+    "held_out": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "hallucination_rate": {
+        "baseline": 0.024390243902439025,
+        "candidate": 0.024390243902439025,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "date_accuracy": {
+        "baseline": 0.6083333333333333,
+        "candidate": 0.6333333333333333,
+        "delta": 0.025000000000000022,
+        "ci_low": -0.10297181372549019,
+        "ci_high": 0.32172619047619017,
+        "n_cases": 6
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 6
+      }
+    },
+    "all": {
+      "detection_rate": {
+        "baseline": 0.9663461538461539,
+        "candidate": 0.9727564102564102,
+        "delta": 0.0064102564102563875,
+        "ci_low": 0.0,
+        "ci_high": 0.01543209876543206,
+        "n_cases": 30
+      },
+      "hallucination_rate": {
+        "baseline": 0.022690437601296597,
+        "candidate": 0.027243589743589744,
+        "delta": 0.004553152142293147,
+        "ci_low": -0.00023151027643152067,
+        "ci_high": 0.012462642452101411,
+        "n_cases": 30
+      },
+      "type_accuracy": {
+        "baseline": 0.9966832504145937,
+        "candidate": 0.9917627677100495,
+        "delta": -0.00492048270454426,
+        "ci_low": -0.016424861634715602,
+        "ci_high": 7.239122910745183e-05,
+        "n_cases": 30
+      },
+      "date_accuracy": {
+        "baseline": 0.7953410981697171,
+        "candidate": 0.7657807308970099,
+        "delta": -0.029560367272707166,
+        "ci_low": -0.08571546127791084,
+        "ci_high": 0.025711896250622163,
+        "n_cases": 30
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9805309734513274,
+        "candidate": 0.9787985865724381,
+        "delta": -0.0017323868788893249,
+        "ci_low": -0.0065001070093211166,
+        "ci_high": 0.00016440003489243124,
+        "n_cases": 30
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 30
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "n_cases": 30
+      }
+    }
+  },
+  "by_provider": {
+    "anthropic": {
+      "detection_rate": {
+        "baseline": 0.9615384615384616,
+        "candidate": 0.9615384615384616,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 0.98,
+        "delta": -0.020000000000000018,
+        "n_cases": 30
+      },
+      "date_accuracy": {
+        "baseline": 0.6866666666666666,
+        "candidate": 0.7346938775510204,
+        "delta": 0.0480272108843538,
+        "n_cases": 30
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      }
+    },
+    "gemini": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "date_accuracy": {
+        "baseline": 0.9038461538461539,
+        "candidate": 0.8461538461538461,
+        "delta": -0.05769230769230771,
+        "n_cases": 30
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9795918367346939,
+        "candidate": 0.9795918367346939,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      }
+    },
+    "groq": {
+      "detection_rate": {
+        "baseline": 0.9615384615384616,
+        "candidate": 0.9743589743589743,
+        "delta": 0.012820512820512775,
+        "n_cases": 30
+      },
+      "hallucination_rate": {
+        "baseline": 0.038461538461538464,
+        "candidate": 0.0379746835443038,
+        "delta": -0.00048685491723466506,
+        "n_cases": 30
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "date_accuracy": {
+        "baseline": 0.8466666666666667,
+        "candidate": 0.7631578947368421,
+        "delta": -0.08350877192982453,
+        "n_cases": 30
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9787234042553191,
+        "candidate": 0.9790209790209791,
+        "delta": 0.000297574765659947,
+        "n_cases": 30
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      }
+    },
+    "openai": {
+      "detection_rate": {
+        "baseline": 0.9423076923076923,
+        "candidate": 0.9551282051282052,
+        "delta": 0.012820512820512886,
+        "n_cases": 30
+      },
+      "hallucination_rate": {
+        "baseline": 0.05161290322580645,
+        "candidate": 0.06875,
+        "delta": 0.017137096774193554,
+        "n_cases": 30
+      },
+      "type_accuracy": {
+        "baseline": 0.9863945578231292,
+        "candidate": 0.9865771812080537,
+        "delta": 0.00018262338492447405,
+        "n_cases": 30
+      },
+      "date_accuracy": {
+        "baseline": 0.7379310344827587,
+        "candidate": 0.7142857142857143,
+        "delta": -0.02364532019704435,
+        "n_cases": 30
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9632352941176471,
+        "candidate": 0.9565217391304348,
+        "delta": -0.006713554987212267,
+        "n_cases": 30
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 30
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 30
+      }
+    }
+  },
+  "by_category": {
+    "assignee_semantics": {
+      "detection_rate": {
+        "baseline": 0.8571428571428571,
+        "candidate": 0.8809523809523809,
+        "delta": 0.023809523809523836,
+        "n_cases": 3
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "date_accuracy": {
+        "baseline": 0.8055555555555556,
+        "candidate": 0.7567567567567568,
+        "delta": -0.04879879879879878,
+        "n_cases": 3
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      }
+    },
+    "calendar_event_attendees": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.75,
+        "candidate": 0.5,
+        "delta": -0.25,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "calendar_event_full": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 0.75,
+        "candidate": 0.75,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "disfluency_heavy": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.75,
+        "candidate": 0.75,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "hallucination_trigger": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "mixed_types": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.4166666666666667,
+        "candidate": 0.3333333333333333,
+        "delta": -0.08333333333333337,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "multi_action": {
+      "detection_rate": {
+        "baseline": 0.9848484848484849,
+        "candidate": 0.9848484848484849,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "hallucination_rate": {
+        "baseline": 0.022556390977443608,
+        "candidate": 0.022556390977443608,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "date_accuracy": {
+        "baseline": 0.6384615384615384,
+        "candidate": 0.5923076923076923,
+        "delta": -0.0461538461538461,
+        "n_cases": 3
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      }
+    },
+    "multi_item_pattern": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.07692307692307693,
+        "delta": 0.07692307692307693,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "negation": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "negation_explicit": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 0.8333333333333334,
+        "candidate": 0.8333333333333334,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.6,
+        "candidate": 0.3,
+        "delta": -0.3,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "negation_false_positive": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "hallucination_rate": {
+        "baseline": 0.1111111111111111,
+        "candidate": 0.1111111111111111,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "date_accuracy": {
+        "baseline": 0.8333333333333334,
+        "candidate": 0.875,
+        "delta": 0.04166666666666663,
+        "n_cases": 2
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      }
+    },
+    "negation_partial": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.9166666666666666,
+        "candidate": 0.9166666666666666,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "no_date": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "notes_only": {
+      "detection_rate": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "reminder_pure": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "reminder_with_date": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "reminder_with_retraction": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.2,
+        "candidate": 0.2,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 0.75,
+        "delta": -0.25,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": null,
+        "candidate": null,
+        "delta": null,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "self_correction_value": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.5,
+        "candidate": 0.25,
+        "delta": -0.25,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 0.5833333333333334,
+        "candidate": 0.5,
+        "delta": -0.08333333333333337,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "type_classification": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "hallucination_rate": {
+        "baseline": 0.1111111111111111,
+        "candidate": 0.14285714285714285,
+        "delta": 0.031746031746031744,
+        "n_cases": 2
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 2
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 2
+      }
+    },
+    "uncertain_event": {
+      "detection_rate": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 1.0,
+        "candidate": 0.25,
+        "delta": -0.75,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    },
+    "vague_dates": {
+      "detection_rate": {
+        "baseline": 0.95,
+        "candidate": 0.9833333333333333,
+        "delta": 0.033333333333333326,
+        "n_cases": 3
+      },
+      "hallucination_rate": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 0.9491525423728814,
+        "delta": -0.05084745762711862,
+        "n_cases": 3
+      },
+      "date_accuracy": {
+        "baseline": 0.7894736842105263,
+        "candidate": 0.9464285714285714,
+        "delta": 0.15695488721804507,
+        "n_cases": 3
+      },
+      "attribution_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 3
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 3
+      }
+    },
+    "vague_time_of_day": {
+      "detection_rate": {
+        "baseline": 0.9333333333333333,
+        "candidate": 0.9333333333333333,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "hallucination_rate": {
+        "baseline": 0.034482758620689655,
+        "candidate": 0.034482758620689655,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "type_accuracy": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "date_accuracy": {
+        "baseline": 0.8928571428571429,
+        "candidate": 1.0,
+        "delta": 0.1071428571428571,
+        "n_cases": 1
+      },
+      "attribution_accuracy": {
+        "baseline": 0.9464285714285714,
+        "candidate": 0.9464285714285714,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_handling": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_positive": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "negation_false_negative": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "delta": 0.0,
+        "n_cases": 1
+      },
+      "schema_adherence": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "delta": 0.0,
+        "n_cases": 1
+      }
+    }
+  },
+  "baseline": "v1",
+  "candidate": "v2",
+  "generated_at": "2026-06-02T19:37:11.677814+00:00",
+  "seed": 0,
+  "n_resamples": 1000
+}
