@@ -13,72 +13,72 @@
   "slices": {
     "visible": {
       "detection_rate": {
-        "v0": 0.9781746031746031,
-        "v1": 0.9583333333333334,
+        "baseline": 0.9781746031746031,
+        "candidate": 0.9583333333333334,
         "delta": -0.01984126984126977,
         "ci_low": -0.036587398373983664,
         "ci_high": 0.0,
         "n_cases": 24
       },
       "hallucination_rate": {
-        "v0": 0.06451612903225806,
-        "v1": 0.022267206477732792,
+        "baseline": 0.06451612903225806,
+        "candidate": 0.022267206477732792,
         "delta": -0.04224892255452527,
         "ci_low": -0.09181463181153007,
         "ci_high": -0.0048147680336930515,
         "n_cases": 24
       },
       "type_accuracy": {
-        "v0": 0.947261663286004,
-        "v1": 0.9958592132505176,
+        "baseline": 0.947261663286004,
+        "candidate": 0.9958592132505176,
         "delta": 0.0485975499645136,
         "ci_low": 0.007410038135761838,
         "ci_high": 0.11488799152721016,
         "n_cases": 24
       },
       "date_accuracy": {
-        "v0": 0.8051391862955032,
-        "v1": 0.841995841995842,
+        "baseline": 0.8051391862955032,
+        "candidate": 0.841995841995842,
         "delta": 0.0368566557003388,
         "ci_low": -0.05758223761462954,
         "ci_high": 0.13610393161707618,
         "n_cases": 24
       },
       "attribution_accuracy": {
-        "v0": 0.9678899082568807,
-        "v1": 0.9752808988764045,
+        "baseline": 0.9678899082568807,
+        "candidate": 0.9752808988764045,
         "delta": 0.007390990619523752,
         "ci_low": -0.013325297306337452,
         "ci_high": 0.023685267494892952,
         "n_cases": 24
       },
       "negation_handling": {
-        "v0": 0.9939148073022313,
-        "v1": 1.0,
+        "baseline": 0.9939148073022313,
+        "candidate": 1.0,
         "delta": 0.006085192697768749,
         "ci_low": 0.0,
         "ci_high": 0.02069324712643682,
         "n_cases": 24
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 24
       },
       "negation_false_negative": {
-        "v0": 0.006085192697768763,
-        "v1": 0.0,
+        "baseline": 0.006085192697768763,
+        "candidate": 0.0,
         "delta": -0.006085192697768763,
         "ci_low": -0.02069324712643678,
         "ci_high": 0.0,
         "n_cases": 24
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
@@ -87,72 +87,72 @@
     },
     "held_out": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "hallucination_rate": {
-        "v0": 0.024390243902439025,
-        "v1": 0.024390243902439025,
+        "baseline": 0.024390243902439025,
+        "candidate": 0.024390243902439025,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "date_accuracy": {
-        "v0": 0.6416666666666667,
-        "v1": 0.6083333333333333,
+        "baseline": 0.6416666666666667,
+        "candidate": 0.6083333333333333,
         "delta": -0.03333333333333344,
         "ci_low": -0.19047619047619047,
         "ci_high": 0.02777777777777779,
         "n_cases": 6
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 6
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
@@ -161,72 +161,72 @@
     },
     "all": {
       "detection_rate": {
-        "v0": 0.9823717948717948,
-        "v1": 0.9663461538461539,
+        "baseline": 0.9823717948717948,
+        "candidate": 0.9663461538461539,
         "delta": -0.01602564102564097,
         "ci_low": -0.033333333333333326,
         "ci_high": 0.0018540051679585758,
         "n_cases": 30
       },
       "hallucination_rate": {
-        "v0": 0.05692307692307692,
-        "v1": 0.022690437601296597,
+        "baseline": 0.05692307692307692,
+        "candidate": 0.022690437601296597,
         "delta": -0.03423263932178033,
         "ci_low": -0.07062622948471933,
         "ci_high": -0.004297862755086485,
         "n_cases": 30
       },
       "type_accuracy": {
-        "v0": 0.9575856443719413,
-        "v1": 0.9966832504145937,
+        "baseline": 0.9575856443719413,
+        "candidate": 0.9966832504145937,
         "delta": 0.039097606042652444,
         "ci_low": 0.0037346697630726336,
         "ci_high": 0.08861871894752883,
         "n_cases": 30
       },
       "date_accuracy": {
-        "v0": 0.7717206132879046,
-        "v1": 0.7953410981697171,
+        "baseline": 0.7717206132879046,
+        "candidate": 0.7953410981697171,
         "delta": 0.023620484881812454,
         "ci_low": -0.05556107217352582,
         "ci_high": 0.11214531335690371,
         "n_cases": 30
       },
       "attribution_accuracy": {
-        "v0": 0.9748201438848921,
-        "v1": 0.9805309734513274,
+        "baseline": 0.9748201438848921,
+        "candidate": 0.9805309734513274,
         "delta": 0.005710829566435316,
         "ci_low": -0.011358548895600952,
         "ci_high": 0.019431149858310626,
         "n_cases": 30
       },
       "negation_handling": {
-        "v0": 0.9951060358890701,
-        "v1": 1.0,
+        "baseline": 0.9951060358890701,
+        "candidate": 1.0,
         "delta": 0.004893964110929905,
         "ci_low": 0.0,
         "ci_high": 0.01807228915662651,
         "n_cases": 30
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
         "n_cases": 30
       },
       "negation_false_negative": {
-        "v0": 0.004893964110929853,
-        "v1": 0.0,
+        "baseline": 0.004893964110929853,
+        "candidate": 0.0,
         "delta": -0.004893964110929853,
         "ci_low": -0.018072289156626505,
         "ci_high": 0.0,
         "n_cases": 30
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "ci_low": 0.0,
         "ci_high": 0.0,
@@ -237,224 +237,224 @@
   "by_provider": {
     "anthropic": {
       "detection_rate": {
-        "v0": 0.9807692307692307,
-        "v1": 0.9615384615384616,
+        "baseline": 0.9807692307692307,
+        "candidate": 0.9615384615384616,
         "delta": -0.019230769230769162,
         "n_cases": 30
       },
       "hallucination_rate": {
-        "v0": 0.04375,
-        "v1": 0.0,
+        "baseline": 0.04375,
+        "candidate": 0.0,
         "delta": -0.04375,
         "n_cases": 30
       },
       "type_accuracy": {
-        "v0": 0.9215686274509803,
-        "v1": 1.0,
+        "baseline": 0.9215686274509803,
+        "candidate": 1.0,
         "delta": 0.07843137254901966,
         "n_cases": 30
       },
       "date_accuracy": {
-        "v0": 0.7092198581560284,
-        "v1": 0.6866666666666666,
+        "baseline": 0.7092198581560284,
+        "candidate": 0.6866666666666666,
         "delta": -0.022553191489361746,
         "n_cases": 30
       },
       "attribution_accuracy": {
-        "v0": 0.9772727272727273,
-        "v1": 1.0,
+        "baseline": 0.9772727272727273,
+        "candidate": 1.0,
         "delta": 0.022727272727272707,
         "n_cases": 30
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       }
     },
     "gemini": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "hallucination_rate": {
-        "v0": 0.018867924528301886,
-        "v1": 0.0,
+        "baseline": 0.018867924528301886,
+        "candidate": 0.0,
         "delta": -0.018867924528301886,
         "n_cases": 30
       },
       "type_accuracy": {
-        "v0": 0.9807692307692307,
-        "v1": 1.0,
+        "baseline": 0.9807692307692307,
+        "candidate": 1.0,
         "delta": 0.019230769230769273,
         "n_cases": 30
       },
       "date_accuracy": {
-        "v0": 0.8627450980392157,
-        "v1": 0.9038461538461539,
+        "baseline": 0.8627450980392157,
+        "candidate": 0.9038461538461539,
         "delta": 0.041101055806938125,
         "n_cases": 30
       },
       "attribution_accuracy": {
-        "v0": 0.9583333333333334,
-        "v1": 0.9795918367346939,
+        "baseline": 0.9583333333333334,
+        "candidate": 0.9795918367346939,
         "delta": 0.021258503401360485,
         "n_cases": 30
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       }
     },
     "groq": {
       "detection_rate": {
-        "v0": 0.9615384615384616,
-        "v1": 0.9615384615384616,
+        "baseline": 0.9615384615384616,
+        "candidate": 0.9615384615384616,
         "delta": 0.0,
         "n_cases": 30
       },
       "hallucination_rate": {
-        "v0": 0.05660377358490566,
-        "v1": 0.038461538461538464,
+        "baseline": 0.05660377358490566,
+        "candidate": 0.038461538461538464,
         "delta": -0.018142235123367198,
         "n_cases": 30
       },
       "type_accuracy": {
-        "v0": 0.96,
-        "v1": 1.0,
+        "baseline": 0.96,
+        "candidate": 1.0,
         "delta": 0.040000000000000036,
         "n_cases": 30
       },
       "date_accuracy": {
-        "v0": 0.7708333333333334,
-        "v1": 0.8466666666666667,
+        "baseline": 0.7708333333333334,
+        "candidate": 0.8466666666666667,
         "delta": 0.07583333333333331,
         "n_cases": 30
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 0.9787234042553191,
+        "baseline": 1.0,
+        "candidate": 0.9787234042553191,
         "delta": -0.021276595744680882,
         "n_cases": 30
       },
       "negation_handling": {
-        "v0": 0.98,
-        "v1": 1.0,
+        "baseline": 0.98,
+        "candidate": 1.0,
         "delta": 0.020000000000000018,
         "n_cases": 30
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_negative": {
-        "v0": 0.02,
-        "v1": 0.0,
+        "baseline": 0.02,
+        "candidate": 0.0,
         "delta": -0.02,
         "n_cases": 30
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       }
     },
     "openai": {
       "detection_rate": {
-        "v0": 0.9871794871794872,
-        "v1": 0.9423076923076923,
+        "baseline": 0.9871794871794872,
+        "candidate": 0.9423076923076923,
         "delta": -0.044871794871794934,
         "n_cases": 30
       },
       "hallucination_rate": {
-        "v0": 0.10465116279069768,
-        "v1": 0.05161290322580645,
+        "baseline": 0.10465116279069768,
+        "candidate": 0.05161290322580645,
         "delta": -0.05303825956489123,
         "n_cases": 30
       },
       "type_accuracy": {
-        "v0": 0.9675324675324676,
-        "v1": 0.9863945578231292,
+        "baseline": 0.9675324675324676,
+        "candidate": 0.9863945578231292,
         "delta": 0.01886209029066166,
         "n_cases": 30
       },
       "date_accuracy": {
-        "v0": 0.738255033557047,
-        "v1": 0.7379310344827587,
+        "baseline": 0.738255033557047,
+        "candidate": 0.7379310344827587,
         "delta": -0.0003239990742883725,
         "n_cases": 30
       },
       "attribution_accuracy": {
-        "v0": 0.9647887323943662,
-        "v1": 0.9632352941176471,
+        "baseline": 0.9647887323943662,
+        "candidate": 0.9632352941176471,
         "delta": -0.0015534382767191657,
         "n_cases": 30
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 30
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 30
       }
@@ -463,1238 +463,1240 @@
   "by_category": {
     "assignee_semantics": {
       "detection_rate": {
-        "v0": 0.8928571428571429,
-        "v1": 0.8571428571428571,
+        "baseline": 0.8928571428571429,
+        "candidate": 0.8571428571428571,
         "delta": -0.03571428571428581,
         "n_cases": 3
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "type_accuracy": {
-        "v0": 0.96,
-        "v1": 1.0,
+        "baseline": 0.96,
+        "candidate": 1.0,
         "delta": 0.040000000000000036,
         "n_cases": 3
       },
       "date_accuracy": {
-        "v0": 0.8333333333333334,
-        "v1": 0.8055555555555556,
+        "baseline": 0.8333333333333334,
+        "candidate": 0.8055555555555556,
         "delta": -0.02777777777777779,
         "n_cases": 3
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       }
     },
     "calendar_event_attendees": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 0.75,
+        "baseline": 1.0,
+        "candidate": 0.75,
         "delta": -0.25,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "calendar_event_full": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.2,
-        "v1": 0.0,
+        "baseline": 0.2,
+        "candidate": 0.0,
         "delta": -0.2,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 0.8333333333333334,
-        "v1": 0.75,
+        "baseline": 0.8333333333333334,
+        "candidate": 0.75,
         "delta": -0.08333333333333337,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "disfluency_heavy": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 0.75,
+        "baseline": 1.0,
+        "candidate": 0.75,
         "delta": -0.25,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "hallucination_trigger": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "mixed_types": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.4166666666666667,
-        "v1": 0.4166666666666667,
+        "baseline": 0.4166666666666667,
+        "candidate": 0.4166666666666667,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "multi_action": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 0.9848484848484849,
+        "baseline": 1.0,
+        "candidate": 0.9848484848484849,
         "delta": -0.015151515151515138,
         "n_cases": 3
       },
       "hallucination_rate": {
-        "v0": 0.043478260869565216,
-        "v1": 0.022556390977443608,
+        "baseline": 0.043478260869565216,
+        "candidate": 0.022556390977443608,
         "delta": -0.02092186989212161,
         "n_cases": 3
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "date_accuracy": {
-        "v0": 0.6590909090909091,
-        "v1": 0.6384615384615384,
+        "baseline": 0.6590909090909091,
+        "candidate": 0.6384615384615384,
         "delta": -0.020629370629370647,
         "n_cases": 3
       },
       "attribution_accuracy": {
-        "v0": 0.9772727272727273,
-        "v1": 1.0,
+        "baseline": 0.9772727272727273,
+        "candidate": 1.0,
         "delta": 0.022727272727272707,
         "n_cases": 3
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       }
     },
     "multi_item_pattern": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.04,
-        "v1": 0.0,
+        "baseline": 0.04,
+        "candidate": 0.0,
         "delta": -0.04,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "negation": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.5833333333333334,
-        "v1": 1.0,
+        "baseline": 0.5833333333333334,
+        "candidate": 1.0,
         "delta": 0.41666666666666663,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "negation_explicit": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 0.8333333333333334,
+        "baseline": 1.0,
+        "candidate": 0.8333333333333334,
         "delta": -0.16666666666666663,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 0.6,
+        "baseline": 1.0,
+        "candidate": 0.6,
         "delta": -0.4,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "negation_false_positive": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "hallucination_rate": {
-        "v0": 0.2,
-        "v1": 0.1111111111111111,
+        "baseline": 0.2,
+        "candidate": 0.1111111111111111,
         "delta": -0.0888888888888889,
         "n_cases": 2
       },
       "type_accuracy": {
-        "v0": 0.9166666666666666,
-        "v1": 1.0,
+        "baseline": 0.9166666666666666,
+        "candidate": 1.0,
         "delta": 0.08333333333333337,
         "n_cases": 2
       },
       "date_accuracy": {
-        "v0": 0.7727272727272727,
-        "v1": 0.8333333333333334,
+        "baseline": 0.7727272727272727,
+        "candidate": 0.8333333333333334,
         "delta": 0.06060606060606066,
         "n_cases": 2
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       }
     },
     "negation_partial": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.9722222222222222,
-        "v1": 0.9166666666666666,
+        "baseline": 0.9722222222222222,
+        "candidate": 0.9166666666666666,
         "delta": -0.05555555555555558,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "no_date": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "notes_only": {
       "detection_rate": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 1.0,
-        "v1": null,
+        "baseline": 1.0,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "reminder_pure": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "reminder_with_date": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "reminder_with_retraction": {
       "detection_rate": {
-        "v0": 0.8333333333333334,
-        "v1": 1.0,
+        "baseline": 0.8333333333333334,
+        "candidate": 1.0,
         "delta": 0.16666666666666663,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.2,
+        "baseline": 0.0,
+        "candidate": 0.2,
         "delta": 0.2,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 0.7,
-        "v1": 1.0,
+        "baseline": 0.7,
+        "candidate": 1.0,
         "delta": 0.30000000000000004,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.5714285714285714,
-        "v1": 1.0,
+        "baseline": 0.5714285714285714,
+        "candidate": 1.0,
         "delta": 0.4285714285714286,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": null,
-        "v1": null,
+        "baseline": null,
+        "candidate": null,
         "delta": null,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 0.7,
-        "v1": 1.0,
+        "baseline": 0.7,
+        "candidate": 1.0,
         "delta": 0.30000000000000004,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.3,
-        "v1": 0.0,
+        "baseline": 0.3,
+        "candidate": 0.0,
         "delta": -0.3,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "self_correction_value": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.8333333333333334,
-        "v1": 0.5,
+        "baseline": 0.8333333333333334,
+        "candidate": 0.5,
         "delta": -0.33333333333333337,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 0.75,
-        "v1": 0.5833333333333334,
+        "baseline": 0.75,
+        "candidate": 0.5833333333333334,
         "delta": -0.16666666666666663,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "type_classification": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "hallucination_rate": {
-        "v0": 0.3333333333333333,
-        "v1": 0.1111111111111111,
+        "baseline": 0.3333333333333333,
+        "candidate": 0.1111111111111111,
         "delta": -0.2222222222222222,
         "n_cases": 2
       },
       "type_accuracy": {
-        "v0": 0.875,
-        "v1": 1.0,
+        "baseline": 0.875,
+        "candidate": 1.0,
         "delta": 0.125,
         "n_cases": 2
       },
       "date_accuracy": {
-        "v0": 0.8571428571428571,
-        "v1": 1.0,
+        "baseline": 0.8571428571428571,
+        "candidate": 1.0,
         "delta": 0.1428571428571429,
         "n_cases": 2
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 2
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 2
       }
     },
     "uncertain_event": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.9166666666666666,
-        "v1": 1.0,
+        "baseline": 0.9166666666666666,
+        "candidate": 1.0,
         "delta": 0.08333333333333337,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     },
     "vague_dates": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 0.95,
+        "baseline": 1.0,
+        "candidate": 0.95,
         "delta": -0.050000000000000044,
         "n_cases": 3
       },
       "hallucination_rate": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "type_accuracy": {
-        "v0": 0.75,
-        "v1": 1.0,
+        "baseline": 0.75,
+        "candidate": 1.0,
         "delta": 0.25,
         "n_cases": 3
       },
       "date_accuracy": {
-        "v0": 0.8888888888888888,
-        "v1": 0.7894736842105263,
+        "baseline": 0.8888888888888888,
+        "candidate": 0.7894736842105263,
         "delta": -0.09941520467836251,
         "n_cases": 3
       },
       "attribution_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 3
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 3
       }
     },
     "vague_time_of_day": {
       "detection_rate": {
-        "v0": 1.0,
-        "v1": 0.9333333333333333,
+        "baseline": 1.0,
+        "candidate": 0.9333333333333333,
         "delta": -0.06666666666666665,
         "n_cases": 1
       },
       "hallucination_rate": {
-        "v0": 0.047619047619047616,
-        "v1": 0.034482758620689655,
+        "baseline": 0.047619047619047616,
+        "candidate": 0.034482758620689655,
         "delta": -0.013136288998357962,
         "n_cases": 1
       },
       "type_accuracy": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "date_accuracy": {
-        "v0": 0.48333333333333334,
-        "v1": 0.8928571428571429,
+        "baseline": 0.48333333333333334,
+        "candidate": 0.8928571428571429,
         "delta": 0.40952380952380957,
         "n_cases": 1
       },
       "attribution_accuracy": {
-        "v0": 0.9,
-        "v1": 0.9464285714285714,
+        "baseline": 0.9,
+        "candidate": 0.9464285714285714,
         "delta": 0.046428571428571375,
         "n_cases": 1
       },
       "negation_handling": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_positive": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "negation_false_negative": {
-        "v0": 0.0,
-        "v1": 0.0,
+        "baseline": 0.0,
+        "candidate": 0.0,
         "delta": 0.0,
         "n_cases": 1
       },
       "schema_adherence": {
-        "v0": 1.0,
-        "v1": 1.0,
+        "baseline": 1.0,
+        "candidate": 1.0,
         "delta": 0.0,
         "n_cases": 1
       }
     }
   },
-  "generated_at": "2026-06-01T01:01:52.984605+00:00",
+  "baseline": "v0",
+  "candidate": "v1",
+  "generated_at": "2026-06-04T03:24:51.607706+00:00",
   "seed": 0,
   "n_resamples": 1000
 }
