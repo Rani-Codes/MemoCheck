@@ -7,8 +7,9 @@ size, date accuracy is sample-size-bound, so a single-line prompt edit cannot pr
 delta we can distinguish from the test set's case-sampling variance** (the dominant of two
 measured noise floors, kept separate below).
 
-Per ADR-004, the held-out gate was dropped for v2, so all 30 cases were visible during
-design. The comparison here is v1 (baseline) vs v2 (candidate) on all 30.
+The held-out gate was dropped for v2 (rationale in `docs/v2-prompt-design.md`; ADR-004's
+gate governs v0 -> v1 only), so all 30 cases were visible during design. The comparison here
+is v1 (baseline) vs v2 (candidate) on all 30.
 
 **Scoring note:** these numbers use the same judged-band matcher (auto-accept cosine
 `>= 0.80`, auto-reject `< 0.50`, Claude Sonnet 4.6 judges in between) and the same persisted
@@ -200,6 +201,13 @@ below v1, well inside the CI.
   v3. The detect-diagnose loop did its job: it surfaced that v1's flat date number hid
   offsetting per-case and per-model effects, and that a carefully reasoned single-line fix
   gets swallowed by the same variance.
+- **The per-case diagnostic shows you where to look, but its fixes can still be wrong.** The
+  same loop drove both versions: read the data, form a theory, ship a prompt change. It got v1
+  right (the type and hallucination fixes both worked). It got v2 wrong. We read the data,
+  decided deleting rule 1b would fix the weekday dates, and were confident about it. The
+  opposite happened: every weekday case got worse. So the data is good at pointing at
+  problems, but a theory that looks right on paper can still fail once you run it. Treat what
+  the diagnostic produces as a hypothesis to test, not a conclusion.
 - **What would actually be needed to move date credibly** (all out of scope here, future
   work): a larger and more date-dense test set so per-case denominators can resolve a
   sub-5-point effect, or per-model handling, which is exactly the fragile tuning this project

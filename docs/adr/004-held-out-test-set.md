@@ -1,5 +1,7 @@
 # Held-out test set for v0 vs v1 comparison
 
+**Scope:** This ADR governs the v0 -> v1 comparison only. v2 makes no generalization claim, so its held-out gate was deliberately dropped; that decision and its rationale live in `docs/v2-prompt-design.md`, not here.
+
 When iterating from v0 to v1, designing the v1 prompt to fix specific failures observed across all 30 test cases would partially overfit v1 to those exact cases. The improvement reported in the writeup would then be a mix of real generalization and test-set memorization, and a reader could not tell how much of each. To prevent this, we split the ~30 test cases into **24 visible cases** (used for v0 evaluation, failure-mode analysis, and v1 prompt design) and **6 held-out cases** that are never inspected during v1 design.
 
 The held-out cases are gated *mechanically*, not by discipline. v0 runs only on the visible 24 first; the held-out 6 do not get any LLM calls until after v1 is fully designed. This ensures there are no stored held-out scores to accidentally read during the iteration phase.
