@@ -62,7 +62,10 @@ def test_responded_counts_clean_output_and_validation_failures():
 
 
 def test_responded_excludes_network_and_infra_errors():
-    assert responded("RateLimitError: litellm.RateLimitError: Rate limit reached") is False
+    assert (
+        responded("RateLimitError: litellm.RateLimitError: Rate limit reached")
+        is False
+    )
     assert responded("APIConnectionError: connection reset by peer") is False
     assert responded("Timeout: request timed out after 60s") is False
 
@@ -110,7 +113,8 @@ def test_build_report_assembles_slices_metrics_and_breakdowns():
 def test_build_report_pools_providers_and_attaches_ci_to_slices():
     recs = [
         MetricRecord("v0", "p", "detection_rate", "c1", 1, 2),
-        MetricRecord("v0", "q", "detection_rate", "c1", 0, 2),  # same case, 2nd provider
+        # same case, 2nd provider
+        MetricRecord("v0", "q", "detection_rate", "c1", 0, 2),
         MetricRecord("v1", "p", "detection_rate", "c1", 2, 2),
         MetricRecord("v1", "q", "detection_rate", "c1", 1, 2),
         MetricRecord("v0", "p", "detection_rate", "c2", 1, 1),
