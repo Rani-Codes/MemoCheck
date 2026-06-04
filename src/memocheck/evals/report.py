@@ -258,8 +258,10 @@ def build_report(
         p_cases = sorted({r.case_id for r in records if r.provider == p})
         by_provider[p] = {}
         for m in metrics:
-            base = micro_average([tuple(prov_pool.get((baseline, p, m), [0, 0]))])
-            cand = micro_average([tuple(prov_pool.get((candidate, p, m), [0, 0]))])
+            base_pair = prov_pool.get((baseline, p, m), [0, 0])
+            cand_pair = prov_pool.get((candidate, p, m), [0, 0])
+            base = micro_average([(base_pair[0], base_pair[1])])
+            cand = micro_average([(cand_pair[0], cand_pair[1])])
             delta = cand - base if base is not None and cand is not None else None
             by_provider[p][m] = PointDelta(base, cand, delta, len(p_cases))
 
