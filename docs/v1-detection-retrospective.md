@@ -3,7 +3,7 @@
 ## What this is
 
 When we talk about v0 -> v1, we usually say two things got better: the agent picks the right
-type more often (detection), and it makes up fewer items (hallucinations). Both are true. 
+type more often (type accuracy), and it makes up fewer items (hallucinations). Both are true. 
 But there's a flip side we didn't say out loud: v1 also got a little worse at *catching* 
 every real item (detection). The same change caused both, so it's only fair to report both.
 
