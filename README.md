@@ -1,6 +1,44 @@
 # MemoCheck
 An eval-driven study of how reliably LLM agents extract structured intent from real-world voice memo transcripts.
 
+**Headline:** eval-driven iteration took the agent from v0 to v1 by cutting the hallucination rate by about 60% (0.057 -> 0.023) and pushing type-classification accuracy to near-perfect (0.958 -> 0.997). Both wins are real, not noise: their 95% bootstrap confidence intervals (1000 resamples, see [ADR-005](./docs/adr/005-bootstrap-confidence-intervals.md)) exclude zero. The same single prompt change also cost a small drop in detection (0.982 -> 0.966), which I report instead of hiding.
+
+## What this is
+
+MemoCheck is two things that only matter together:
+
+1. **An agent** that takes a voice-memo transcript and extracts structured intent (todos, calendar events, reminders, and notes) as strict JSON.
+2. **An evaluation suite** that measures how reliably that extraction works, with deterministic scoring owned in-repo and [DeepEval](https://github.com/confident-ai/deepeval) used only as the pytest-native test runner, not as the grader.
+
+The agent exists to be evaluated, and the evaluation exists to surface and quantify real failure modes. The hero result is a before/after study showing that systematic evaluation plus iteration measurably improves agent reliability.
+
+## Why this matters
+
+Voice-to-action is one of the least benchmarked areas in applied LLM work. Public benchmarks mostly measure either transcription accuracy (did the words match the audio?) or general capability (MMLU, HumanEval). Almost nothing measures the step that actually ships in voice products: given a noisy transcript, can the model pull out the right structured intent? MemoCheck is a small, focused, reproducible benchmark for exactly that step.
+
+## Architecture
+
+```
+Test transcripts (JSON + hand-labeled ground truth, 30 cases)
+        |
+        v
+Agent (Python, litellm)            single LLM call -> strict JSON
+  transcript -> ExtractedMemo      Pydantic validate, retry once on failure
+        |
+        v
+DeepEval runner (orchestration only: dataset, retries, resumability)
+        |
+        v
+In-repo deterministic scorer
+  embedding + Hungarian matcher, judged band (ADR-002)
+  tiered metrics (ADR-001): detection / hallucination, type, date / attribution, negation
+        |
+        v
+Postgres (test_runs, metric_scores) -> report (micro-average + bootstrap CIs) -> dashboard
+```
+
+The agent and the eval suite are independent: swap in a different extraction approach and the suite still works.
+
 ## Requirements
 
 - **Apple Silicon Mac (M1/M2...)** -- transcription uses `mlx-whisper` for local, free, offline inference via the MLX framework. The first run downloads the selected model to your HuggingFace cache (~150MB for `base`); subsequent runs skip the download. If you're on Intel, swap in the [OpenAI Whisper API](https://platform.openai.com/docs/guides/speech-to-text) and update `scripts/transcribe.py` accordingly.
@@ -23,14 +61,11 @@ docker compose up -d  # start Postgres
     - Con: Agent might put real tasks in the notes field, but this is fine because our evals catch it.
         - If an agent puts a real todo into notes instead of todo, the matcher has no agent-side todo to pair with the ground-truth todo, so Detection Rate drops.
 
-## Architectural and methodology decisions
-- These are recorded as ADRs (Architecture Decision Record) in [`docs/adr/`](./docs/adr/).
-
 ## Thinking process: eval design
 
 Initially I had planned to use an LLM-as-a-judge to evaluate the agent outputs. That made sense at first, but as I rewrote my evals to take a flattened action-item-metric three-tier approach so an agent's output gets flagged incorrect once instead of twice (see [ADR-001](./docs/adr/001-flattened-action-item-metrics.md)), I had to build a matching algorithm. Since todos, reminders, and calendar events were now being scored from a single pool, the matcher was what picked them apart again.
 
-I went with an embedding similarity + Hungarian algorithm combo (see [ADR-002](./docs/adr/002-embedding-based-matching.md)): encode each item as a vector, build a pairwise cosine similarity matrix, then run the Hungarian algorithm to find the optimal one-to-one pairing above a 0.8 cosine-similarity threshold. The known con is that embeddings can miss nuance (e.g. "buy milk" vs "don't buy milk"), but to avoid premature optimization I leaned on the `negated: true` flag already on the schema. If the spot-check at the end shows the matcher is wrong on more than 5% of cases, I can add an LLM-judge hybrid where embeddings narrow to top-K candidates and the LLM only judges among those.
+I went with an embedding similarity + Hungarian algorithm combo (see [ADR-002](./docs/adr/002-embedding-based-matching.md)): encode each item as a vector, build a pairwise cosine similarity matrix, then run the Hungarian algorithm to find the optimal one-to-one pairing above a 0.8 cosine-similarity threshold. The known con is that embeddings can miss nuance (e.g. "buy milk" vs "don't buy milk"), but to avoid premature optimization I leaned on the `negated: true` flag already on the schema. That spot-check did end up firing. The matched pairs were all correct (20 of 20), but the single 0.80 cutoff was rejecting genuine same-item pairs whose labels differed in length or qualifiers (26 of 63 hallucinations were really false negatives), so I escalated to a judged band: auto-accept at cosine >= 0.80, auto-reject below 0.50, and a non-agent LLM judge (Claude Sonnet 4.6) decides the middle, with verdicts cached in `data/judge_cache.json` for reproducibility. The full check is in [the v0 matcher validation](./docs/v0-matcher-validation.md).
 
 This new matching design also surfaced something I'd missed. I had been planning to use gpt-4.1-mini as the judge, but it was also one of the agents producing outputs. That's self-preference bias, which is when a model rates its own output higher than others. To avoid it I pushed hard to make scoring deterministic, and after rethinking the evals I was able to build deterministic versions that produced the same results I originally wanted. The LLM-judge ended up only being necessary as a fallback if the matcher itself underperforms.
 
@@ -40,9 +75,36 @@ Bigger picture: The whole point of evals is to drive decisions for better agent 
 
 **On the small-N concern:** I deliberately chose depth over breadth. ~30 hand-labeled cases targeting specific known failure modes (vague dates, negation, disfluencies) gives a sharper diagnostic signal than hundreds of shallow cases. Stripe's recent agentic benchmark used 11 hard tasks for the same reason, which is good external precedent for the deterministic-graders-plus-hard-tasks approach I adopted ([Stripe Engineering blog](https://stripe.com/blog/can-ai-agents-build-real-stripe-integrations)).
 
-## Results
+## Methodology
 
-**Headline:** eval-driven iteration took the agent from v0 to v1 by cutting the hallucination rate by about 60% (0.057 -> 0.023) and pushing type-classification accuracy to near-perfect (0.958 -> 0.997). Both wins are real, not noise: their 95% bootstrap confidence intervals (1000 resamples, see [ADR-005](./docs/adr/005-bootstrap-confidence-intervals.md)) exclude zero. The same single prompt change also cost a small drop in detection (0.982 -> 0.966), which I report instead of hiding.
+The decisions behind the choices below are recorded as ADRs (Architecture Decision Records) in [`docs/adr/`](./docs/adr/); the load-bearing ones are linked inline.
+
+### Test set
+
+30 hand-labeled cases: 22 self-recorded voice memos (transcribed locally with `mlx-whisper`) and 8 synthetic transcripts written to cover edge cases the recordings under-sample (vague dates, mixed types, disfluencies, ambiguous attribution, negation). Most cases are action-driven (Todos and Events), which mirrors how people actually use voice memos; the Reminder type and negation are covered mostly through the synthetic cases. The full per-case breakdown, categories, and counts are in [`docs/test-set-composition.md`](./docs/test-set-composition.md). Many categories are represented by a single case, which is why the per-category deltas are read as illustrative rather than statistically powered.
+
+To keep the v0 -> v1 comparison honest, the 30 cases are split into **24 visible** and **6 held-out** ([ADR-004](./docs/adr/004-held-out-test-set.md)). v1's prompt was designed only against the visible 24; the held-out 6 got no LLM calls until v1 was frozen. Deltas are reported on three slices (visible, held-out, all) so overfitting would show up as a held-out collapse.
+
+### Metrics
+
+Scoring is deterministic and owned in-repo (DeepEval runs the tests, it does not grade them). Items are scored from a single flattened pool and matched to ground truth first, then graded in tiers ([ADR-001](./docs/adr/001-flattened-action-item-metrics.md)):
+
+- **Tier 1, detection.** For each ground-truth action item, did the agent produce a matching item (**detection rate**), and what share of the agent's items matched nothing (**hallucination rate**)? Notes are excluded from this pool on purpose.
+- **Tier 2, type.** On matched pairs, did the agent pick the right type (Todo / Reminder / CalendarEvent)?
+- **Tier 3, fields.** On matched pairs whose type was right, are the **date** and **attribution** (assignee / attendees) correct?
+- **Negation**, scored on every matched pair regardless of type, since the `negated` flag is type-agnostic.
+- **Schema adherence**, a cross-cutting check: did the output pass strict Pydantic validation on the first LLM attempt?
+
+Matching uses local sentence-transformers embeddings plus the Hungarian algorithm over the judged band described above ([ADR-002](./docs/adr/002-embedding-based-matching.md)). Every reported v0 -> v1 delta carries a 95% bootstrap CI (1000 resamples, seed 0, [ADR-005](./docs/adr/005-bootstrap-confidence-intervals.md)).
+
+### Validation
+
+Two checks gate the results:
+
+1. **Matcher spot-check.** Counts recomputed from the raw outputs reconcile exactly with Postgres, and 20 of 20 randomly sampled matched pairs were correct (0% error, under the 5% bar). This same check is what surfaced the brittle single-cutoff problem and drove the judged band. See [the v0 matcher validation](./docs/v0-matcher-validation.md).
+2. **Schema adherence.** Every agent output is validated against the Pydantic schema and the first-attempt pass rate is tracked rather than silently coerced. It came out at 100% across all providers and versions.
+
+## Results
 
 Every number below is micro-averaged across 4 providers x 30 cases x 3 attempts. Micro-averaged means each metric is the sum of its raw per-case numerators divided by the sum of its denominators (for example, total correctly-typed items over total matched pairs), not the average of per-case percentages. That stops a case with one action item from counting as much as a case with five, which a naive per-case average would do. **v1 is the agent of record.** The full frozen run data lives in [`data/db_snapshot/`](./data/db_snapshot/) so the table is auditable even though the agents are not bit-for-bit reproducible (the [v2 failure analysis](./docs/v2-failure-analysis.md) explains the run-to-run nondeterminism).
 
@@ -146,6 +208,20 @@ Out of scope for this study, but the obvious path to a real product:
 - Multi-language support (the current study is English only).
 - Domain-specific test sets (medical, legal, meeting notes), each with its own labeling guide.
 - A human-in-the-loop review interface for eval results and disagreements.
+
+## Reproduction
+
+The fastest way to check any number in this README is the frozen snapshot in [`data/db_snapshot/`](./data/db_snapshot/), which exports the two Postgres tables behind every figure (`test_runs.csv` and `metric_scores.csv`). It exists because the agents are not deterministic even at temperature 0 (15 of 346 case cells return different scores across reruns), so re-running the models would not reproduce the published numbers. Scoring, by contrast, is deterministic and the judge cache is committed, so the snapshot makes the entire downstream pipeline bit-for-bit reproducible. Two paths:
+
+1. **From counts alone:** load `metric_scores.csv`, group by the slice you want, micro-average with `SUM(numerator) / SUM(denominator)`, and bootstrap-resample the per-case scores (1000 resamples, seed 0). This reproduces every rate and CI.
+2. **From frozen agent outputs:** feed `test_runs.actual_output` back through the committed scorer in `src/memocheck/evals/` with the committed `data/judge_cache.json`. Deterministic by ADR-002, so it reproduces the matched pairs and scores exactly.
+
+To run the pipeline yourself end to end (this needs API keys and a local Postgres, and will not be bit-for-bit because of the nondeterminism above):
+
+```bash
+memocheck run --agent-version v1 --slice all     # 4 providers x 30 cases x 3 attempts
+memocheck report --baseline v0 --candidate v1    # writes data/results/v0_vs_v1.json
+```
 
 ## Engineering Notes
 - **`pip install -e .` (editable install):** links the package to your local `src/` so code changes reflect immediately without reinstalling. Use this during development. Use `pip install .` (no `-e`) when you want a static install, like in a Docker image or CI.
