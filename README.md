@@ -122,6 +122,14 @@ Every number below is micro-averaged across 4 providers x 30 cases x 3 attempts.
 
 Higher is better for everything except hallucination rate, where lower is better.
 
+![v0 vs v1 across all six metrics, all 30 cases](./dashboard/charts/before_after.png)
+
+*v0 vs v1 absolute rates. Type and Hallucination move the most; Date stays low across both versions.*
+
+![v0 to v1 improvement with 95% bootstrap confidence intervals](./dashboard/charts/improvement_ci.png)
+
+*The same deltas shown as improvements (oriented so positive is better) with 95% bootstrap CIs. Only Type and Hallucination clear zero; Detection is the gray cost sitting left of zero; Date's interval is too wide to call.*
+
 ### The three-act story
 
 **Act 1, the eval finds three real gaps.** v0's aggregate scores looked decent, but scoring each case separately surfaced three specific weaknesses: date resolution sat at ~0.77, the agent confused item types (Todo vs Reminder vs CalendarEvent), and it invented items that were not there (worst on OpenAI at a 0.105 hallucination rate).
