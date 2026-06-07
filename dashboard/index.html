@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MemoCheck results: eval-driven voice-memo intent extraction</title>
+<meta name="description" content="A before/after study showing that systematic evaluation plus iteration measurably improves how reliably an LLM agent extracts structured intent from voice-memo transcripts.">
+<style>
+  :root {
+    --paper: #f8f4e4;
+    --ink: #292723;
+    --head: #1f1d1a;
+    --muted: #6e6a61;
+    --line: #e7e2d6;
+    --rule: #d8d2c4;
+    --accent: #2b2926;
+    --card: #ffffff;
+    --serif: Charter, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--paper);
+    font: 19px/1.72 var(--serif);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-wrap: break-word;
+  }
+  img, svg, table { max-width: 100%; }
+  ::selection { background: rgba(156, 87, 51, 0.18); }
+  .wrap { max-width: 700px; margin: 0 auto; padding: 0 22px; }
+  header.hero {
+    border-bottom: 1px solid var(--line);
+    padding: 64px 0 30px;
+  }
+  h1 { font-family: var(--sans); font-size: 44px; font-weight: 700; line-height: 1.12; letter-spacing: -0.022em; margin: 0 0 12px; color: var(--head); }
+  .tagline { font-size: 21px; line-height: 1.5; color: var(--muted); margin: 0 0 6px; }
+  .headline {
+    font-size: 20px;
+    line-height: 1.62;
+    border-left: 3px solid var(--accent);
+    padding-left: 22px;
+    margin: 28px 0 4px;
+  }
+  .headline strong { color: var(--accent); font-family: var(--sans); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  main { padding: 0 0 40px; }
+  section { padding: 36px 0 4px; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 { font-family: var(--sans); font-size: 28px; font-weight: 700; line-height: 1.22; letter-spacing: -0.015em; margin: 0 0 8px; color: var(--head); }
+  h2 .kicker { display: block; font-family: var(--sans); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 10px; }
+  h3 { font-family: var(--sans); font-size: 18px; font-weight: 700; margin: 28px 0 8px; color: var(--head); }
+  p { margin: 16px 0; }
+  #overview > p:first-of-type { font-size: 20px; }
+  #overview > p:first-of-type::first-letter {
+    float: left; font-family: var(--serif); font-weight: 700;
+    font-size: 3.5em; line-height: 0.76; padding: 8px 12px 0 0; color: var(--accent);
+  }
+  a { color: var(--ink); text-decoration: underline; text-decoration-color: rgba(156, 87, 51, 0.45); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--accent); }
+  figure { margin: 28px 0 10px; }
+  figure img { width: 100%; height: auto; display: block; background: var(--card); border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 1px 2px rgba(40, 35, 25, 0.05); }
+  figcaption { font-family: var(--sans); color: var(--muted); font-size: 13.5px; line-height: 1.5; margin-top: 12px; text-align: center; }
+  figcaption a { color: var(--muted); }
+  .table-scroll { overflow-x: auto; margin: 22px 0 8px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: 14px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th:first-child, td:first-child { white-space: normal; }
+  thead th { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.06em; border-bottom: 2px solid var(--rule); }
+  @media (hover: hover) and (pointer: fine) {
+    tbody tr:hover { background: rgba(156, 87, 51, 0.035); }
+  }
+  td .v0 { color: var(--muted); }
+  td .arrow { color: #c4bdae; padding: 0 3px; }
+  td .v1 { font-weight: 700; color: var(--head); }
+  .note { font-family: var(--sans); color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+  .callout { background: rgba(156, 87, 51, 0.05); border: 1px solid var(--line); border-radius: 6px; padding: 8px 24px; margin: 20px 0; }
+  ul { margin: 16px 0; padding-left: 24px; }
+  li { margin: 8px 0; }
+  .loom {
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    background: rgba(156, 87, 51, 0.04);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--sans);
+  }
+  footer { border-top: 1px solid var(--rule); padding: 20px 0 36px; color: var(--muted); font-family: var(--sans); font-size: 13.5px; line-height: 1.6; }
+  footer a { color: var(--muted); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; background: rgba(40, 35, 25, 0.05); padding: 1px 5px; border-radius: 4px; }
+  @media (max-width: 760px) {
+    .wrap { padding: 0 20px; }
+    section { padding: 40px 0 4px; }
+    h2 { font-size: 26px; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 18px; }
+    .wrap { padding: 0 18px; }
+    header.hero { padding: 44px 0 22px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 23px; }
+    h3 { font-size: 17px; }
+    .tagline { font-size: 19px; }
+    .headline { font-size: 18px; padding-left: 16px; }
+    #overview > p:first-of-type { font-size: 19px; }
+    #overview > p:first-of-type::first-letter { font-size: 3.1em; padding: 6px 10px 0 0; }
+    section { padding: 36px 0 20px; }
+    figure { margin: 22px 0 8px; }
+    .callout { padding: 4px 18px; }
+    .loom { padding: 40px 18px; }
+
+    /* leaderboard reflows from a wide grid into stacked per-provider cards */
+    .table-scroll { overflow: visible; margin: 18px 0 8px; }
+    table { font-size: 15px; }
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tr {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      margin: 0 0 14px;
+      padding: 2px 16px 6px;
+    }
+    td {
+      border: none;
+      border-bottom: 1px solid var(--line);
+      padding: 9px 0;
+      white-space: normal;
+    }
+    td:last-child { border-bottom: none; }
+    td:first-child {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--head);
+      padding: 8px 0;
+      border-bottom: 2px solid var(--rule);
+    }
+    td:not(:first-child)::before {
+      content: attr(data-label);
+      display: inline-block;
+      min-width: 130px;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+  }
+  @media (max-width: 400px) {
+    body { font-size: 17px; }
+    .wrap { padding: 0 15px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 21px; }
+    .tagline { font-size: 18px; }
+    header.hero { padding: 36px 0 18px; }
+    #overview > p:first-of-type::first-letter { font-size: 2.8em; }
+    td:not(:first-child)::before { min-width: 112px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>MemoCheck</h1>
+    <p class="tagline">An eval-driven study of how reliably LLM agents extract structured intent from real-world voice memo transcripts.</p>
+    <div class="headline">
+      <strong>Headline:</strong> eval-driven iteration took the agent from v0 to v1 by cutting the hallucination rate by about 60% (0.057 &rarr; 0.023) and pushing type-classification accuracy to near-perfect (0.958 &rarr; 0.997). Both wins are real, not noise: their 95% bootstrap confidence intervals (1000 resamples) exclude zero. The same single prompt change also cost a small drop in detection (0.982 &rarr; 0.966), which is reported here for transparency.
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="overview">
+    <p>MemoCheck is two things that only matter together: an <strong>agent</strong> that turns a voice-memo transcript into strict JSON intent (todos, calendar events, reminders, notes), and an <strong>evaluation suite</strong> that measures how reliably that extraction works. Scoring is deterministic and owned in-repo; <a href="https://github.com/confident-ai/deepeval">DeepEval</a> is used only as the pytest-native test runner, not as the grader. Every number below is micro-averaged across 4 providers, 30 cases, and 3 attempts. <strong>v1 is the agent of record.</strong></p>
+    <p class="note">Full write-up, methodology, and reproduction steps live in the <a href="https://github.com/Rani-Codes/MemoCheck#readme">project README on GitHub</a>.</p>
+  </section>
+
+  <section id="walkthrough">
+    <h2><span class="kicker">90-second tour</span>Video walkthrough</h2>
+    <p>Short on time? Watch this for the gist. Everything below is the full writeup.</p>
+    <div class="loom">
+      <p>The 90-second walkthrough will be embedded here once it is recorded.</p>
+    </div>
+  </section>
+
+  <section id="improvement">
+    <h2><span class="kicker">The hero result</span>v0 to v1, with confidence intervals</h2>
+    <p>The same deltas shown as improvements (oriented so positive is better), each with a 95% bootstrap confidence interval. Only Type and Hallucination clear zero. Detection is the disclosed cost sitting left of zero. Date's interval is too wide to call.</p>
+    <figure>
+      <img src="./charts/improvement_ci.svg" alt="v0 to v1 improvement per metric with 95% bootstrap confidence intervals; Type accuracy and Hallucination rate clear zero, Detection sits left of zero, Date straddles zero.">
+      <figcaption>v0 &rarr; v1 improvement per metric, all 30 cases. Intervals are 1000-resample bootstrap CIs (<a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/adr/005-bootstrap-confidence-intervals.md">ADR-005</a>).</figcaption>
+    </figure>
+  </section>
+
+  <section id="leaderboard">
+    <h2><span class="kicker">Leaderboard</span>Per-provider, v0 to v1</h2>
+    <p>Each cell shows the v0 score, then v1. Higher is better for every metric except hallucination rate, where lower is better. The bottom row is the micro-average across all four providers.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Detection</th>
+            <th>Hallucination</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Attribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Anthropic (Haiku 4.5)</td>
+            <td data-label="Detection"><span class="v0">0.981</span><span class="arrow">&rarr;</span><span class="v1">0.962</span></td>
+            <td data-label="Hallucination"><span class="v0">0.044</span><span class="arrow">&rarr;</span><span class="v1">0.000</span></td>
+            <td data-label="Type"><span class="v0">0.922</span><span class="arrow">&rarr;</span><span class="v1">1.000</span></td>
+            <td data-label="Date"><span class="v0">0.709</span><span class="arrow">&rarr;</span><span class="v1">0.687</span></td>
+            <td data-label="Attribution"><span class="v0">0.977</span><span class="arrow">&rarr;</span><span class="v1">1.000</span></td>
+          </tr>
+          <tr>
+            <td>Gemini (3.1 Flash Lite Preview)</td>
+            <td data-label="Detection"><span class="v0">1.000</span><span class="arrow">&rarr;</span><span class="v1">1.000</span></td>
+            <td data-label="Hallucination"><span class="v0">0.019</span><span class="arrow">&rarr;</span><span class="v1">0.000</span></td>
+            <td data-label="Type"><span class="v0">0.981</span><span class="arrow">&rarr;</span><span class="v1">1.000</span></td>
+            <td data-label="Date"><span class="v0">0.863</span><span class="arrow">&rarr;</span><span class="v1">0.904</span></td>
+            <td data-label="Attribution"><span class="v0">0.958</span><span class="arrow">&rarr;</span><span class="v1">0.980</span></td>
+          </tr>
+          <tr>
+            <td>Groq (Llama 3.3 70B)</td>
+            <td data-label="Detection"><span class="v0">0.962</span><span class="arrow">&rarr;</span><span class="v1">0.962</span></td>
+            <td data-label="Hallucination"><span class="v0">0.057</span><span class="arrow">&rarr;</span><span class="v1">0.038</span></td>
+            <td data-label="Type"><span class="v0">0.960</span><span class="arrow">&rarr;</span><span class="v1">1.000</span></td>
+            <td data-label="Date"><span class="v0">0.771</span><span class="arrow">&rarr;</span><span class="v1">0.847</span></td>
+            <td data-label="Attribution"><span class="v0">1.000</span><span class="arrow">&rarr;</span><span class="v1">0.979</span></td>
+          </tr>
+          <tr>
+            <td>OpenAI (GPT-4.1 mini)</td>
+            <td data-label="Detection"><span class="v0">0.987</span><span class="arrow">&rarr;</span><span class="v1">0.942</span></td>
+            <td data-label="Hallucination"><span class="v0">0.105</span><span class="arrow">&rarr;</span><span class="v1">0.052</span></td>
+            <td data-label="Type"><span class="v0">0.968</span><span class="arrow">&rarr;</span><span class="v1">0.986</span></td>
+            <td data-label="Date"><span class="v0">0.738</span><span class="arrow">&rarr;</span><span class="v1">0.738</span></td>
+            <td data-label="Attribution"><span class="v0">0.965</span><span class="arrow">&rarr;</span><span class="v1">0.963</span></td>
+          </tr>
+          <tr>
+            <td>All (micro-avg)</td>
+            <td data-label="Detection"><span class="v0">0.982</span><span class="arrow">&rarr;</span><span class="v1">0.966</span></td>
+            <td data-label="Hallucination"><span class="v0">0.057</span><span class="arrow">&rarr;</span><span class="v1">0.023</span></td>
+            <td data-label="Type"><span class="v0">0.958</span><span class="arrow">&rarr;</span><span class="v1">0.997</span></td>
+            <td data-label="Date"><span class="v0">0.772</span><span class="arrow">&rarr;</span><span class="v1">0.795</span></td>
+            <td data-label="Attribution"><span class="v0">0.975</span><span class="arrow">&rarr;</span><span class="v1">0.981</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">OpenAI is the hallucination laggard (0.052 at v1, still the highest after halving from 0.105 at v0) and took the biggest detection hit. Gemini leads on date accuracy. The negation and schema-adherence metrics are reported separately below, because neither carries an iteration story.</p>
+  </section>
+
+  <section id="heatmap">
+    <h2><span class="kicker">By provider and metric</span>v1 scores, at a glance</h2>
+    <p>The v1 (agent of record) score for each provider and metric. Hallucination is excluded here because lower is better for it; see the leaderboard and the hero chart for that metric.</p>
+    <figure>
+      <img src="./charts/provider_heatmap.svg" alt="Heatmap of v1 scores by provider across type accuracy, detection, date accuracy, attribution, and negation handling.">
+      <figcaption>v1 scores by provider (higher is better). Color spans 0.6 to 1.0; cell labels are exact.</figcaption>
+    </figure>
+  </section>
+
+  <section id="per-category">
+    <h2><span class="kicker">Where v1 moved the needle</span>Per-category deltas</h2>
+    <p>The v0 to v1 change broken out by failure category, so the story is which failure modes actually moved, not just the aggregate.</p>
+    <figure>
+      <img src="./charts/per_category_deltas.svg" alt="Per-category v0 to v1 deltas; most categories have a single case and are marked anecdotal with no confidence interval.">
+      <figcaption><strong>Read with care.</strong> Most categories contain only a single case (n=1), marked anecdotal on the chart with no confidence interval. Treat per-category bars as directional, not statistical. The aggregate result and its CIs (above) are the load-bearing numbers; this view is the qualitative complement.</figcaption>
+    </figure>
+  </section>
+
+  <section id="date-trajectory">
+    <h2><span class="kicker">The honest negative</span>v2 attacked date accuracy, and it did not move</h2>
+    <p>v2's one job was to lift date accuracy. All-30 date went 0.795 &rarr; 0.766 with a CI of [-0.086, +0.026]: no move. That is the honest result. At 30 cases, the effect a single prompt edit can produce (~0.03) is smaller than the test set's case-sampling noise (~&plusmn;0.06), so date is sample-size-bound. This is a finding about the benchmark's resolution, not a v2 failure, and it is why there is no v3.</p>
+    <figure>
+      <img src="./charts/date_trajectory.svg" alt="Date accuracy across v0, v1, and v2, showing it stays roughly flat and does not improve at v2.">
+      <figcaption>Date accuracy across versions. The v1 to v2 change is within sampling noise. Full reasoning in the <a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/v2-failure-analysis.md">v2 failure analysis</a>.</figcaption>
+    </figure>
+  </section>
+
+  <section id="solved">
+    <h2><span class="kicker">Already solved</span>Two metrics with no iteration story</h2>
+    <div class="callout">
+      <ul>
+        <li><strong>Negation handling</strong> is near-perfect from v0 (0.995, then 1.000 at v1 and v2 with a zero-width CI). Current models handle "scratch that" retractions and false-positive traps well, so this is a single finding, not an iteration metric. The test set deliberately over-invested in negation expecting a failure mode that did not materialize.</li>
+        <li><strong>Schema adherence</strong> is 100% on the first LLM attempt across every provider and version. The structured-output plus Pydantic-validate-and-retry design works. It is a validation result, not a before/after signal.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="methodology">
+    <h2><span class="kicker">How it works</span>Methodology</h2>
+    <ul>
+      <li><strong>Test set.</strong> 30 hand-labeled transcripts (22 self-recorded plus 8 synthetic edge cases), split into 24 visible and 6 held-out (<a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/adr/004-held-out-test-set.md">ADR-004</a>). The held-out six were never opened during failure-mode analysis or v1 design.</li>
+      <li><strong>Scoring.</strong> A deterministic in-repo scorer: an embedding plus Hungarian matcher with a judged band (<a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/adr/002-embedding-based-matching.md">ADR-002</a>), then tiered metrics for detection, hallucination, type, date, attribution, and negation (<a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/adr/001-flattened-action-item-metrics.md">ADR-001</a>).</li>
+      <li><strong>Aggregation.</strong> Every metric is micro-averaged: the sum of raw per-case numerators over the sum of denominators, so a case with one action item does not count as much as a case with five.</li>
+      <li><strong>Confidence intervals.</strong> Each reported delta carries a 95% bootstrap CI from 1000 resamples of the per-case scores (<a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/adr/005-bootstrap-confidence-intervals.md">ADR-005</a>).</li>
+    </ul>
+    <p class="note">The full methodology, including the matcher spot-check validation and the labeling conventions, is in the <a href="https://github.com/Rani-Codes/MemoCheck#methodology">README</a>.</p>
+  </section>
+
+  <section id="limitations">
+    <h2><span class="kicker">Honest caveats</span>Limitations</h2>
+    <ul>
+      <li><strong>Small N.</strong> 24 visible plus 6 held-out cases. The bootstrap CIs are wide, especially on the held-out split. A held-out CI that straddles zero is not on its own evidence of failure to generalize.</li>
+      <li><strong>v0 is not a blind baseline.</strong> The v0 prompt and the labeling guide were co-designed, so v0 already knows the schema conventions the test set uses. The v0 to v1 delta is still meaningful, but absolute v0 scores are not "what an off-the-shelf agent would do on novel data".</li>
+      <li><strong>English only, single speaker, single labeler.</strong> Accent robustness, multilingual extraction, noisy-background performance, and inter-annotator agreement are all out of scope.</li>
+      <li><strong>Provider snapshot, not provider capability.</strong> Every score is conditional on the model versions used at run time. Provider behavior drifts.</li>
+    </ul>
+    <p class="note">The complete limitations list is in the <a href="https://github.com/Rani-Codes/MemoCheck#limitations">README</a>.</p>
+  </section>
+
+  <section id="future-work">
+    <h2><span class="kicker">What's next</span>Where this study points next</h2>
+    <ul>
+      <li><strong>A bigger, date-dense test set, sized for resolution.</strong> The flat date trajectory above is a measurement limit, not a dead end: at N=30 the benchmark cannot resolve a ~0.03 date effect against ~&plusmn;0.06 sampling noise. The next step is more date-bearing cases, stratified by memo size and date type, planned for statistical power.</li>
+      <li><strong>A detection-focused iteration.</strong> v1 cut hallucinations but dropped 10 real items, because detection and hallucination read off the same matcher pool. The next iteration would decouple them: recover the dropped true positives without re-adding the false positives, likely a two-pass extract-then-filter rather than one prompt knob.</li>
+    </ul>
+    <p class="note">Full future-work list, including productionization, in the <a href="https://github.com/Rani-Codes/MemoCheck#future-work">README</a>.</p>
+  </section>
+
+  <section id="reproduction">
+    <h2><span class="kicker">Run it yourself</span>Reproduction</h2>
+    <p>The frozen run data lives in <a href="https://github.com/Rani-Codes/MemoCheck/tree/main/data/db_snapshot">data/db_snapshot/</a>, so every number on this page is auditable even though the agents are not bit-for-bit reproducible (run-to-run nondeterminism is explained in the <a href="https://github.com/Rani-Codes/MemoCheck/blob/main/docs/v2-failure-analysis.md">v2 failure analysis</a>). The charts on this page are generated from <code>data/results/*.json</code> by <code>scripts/build_charts.py</code>.</p>
+    <p class="note">Clone the repo, <code>pip install -e .</code>, and follow the <a href="https://github.com/Rani-Codes/MemoCheck#reproduction">reproduction steps in the README</a>.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>MemoCheck is an eval-driven benchmark for voice-memo intent extraction. Source, data, and full write-up on <a href="https://github.com/Rani-Codes/MemoCheck">GitHub</a>. All scores are micro-averaged across 4 providers, 30 cases, and 3 attempts; v1 is the agent of record.</p>
+  </div>
+</footer>
+
+</body>
+</html>
