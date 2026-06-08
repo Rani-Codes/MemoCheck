@@ -79,15 +79,7 @@
   .callout { background: rgba(156, 87, 51, 0.05); border: 1px solid var(--line); border-radius: 6px; padding: 8px 24px; margin: 20px 0; }
   ul { margin: 16px 0; padding-left: 24px; }
   li { margin: 8px 0; }
-  .loom {
-    border: 1px dashed var(--rule);
-    border-radius: 6px;
-    background: rgba(156, 87, 51, 0.04);
-    padding: 32px 24px;
-    text-align: center;
-    color: var(--muted);
-    font-family: var(--sans);
-  }
+  .walkthrough { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 1px 2px rgba(40, 35, 25, 0.05); background: #000; margin: 6px 0 4px; }
   footer { border-top: 1px solid var(--rule); padding: 20px 0 36px; color: var(--muted); font-family: var(--sans); font-size: 13.5px; line-height: 1.6; }
   footer a { color: var(--muted); }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; background: rgba(40, 35, 25, 0.05); padding: 1px 5px; border-radius: 4px; }
@@ -110,7 +102,6 @@
     section { padding: 36px 0 20px; }
     figure { margin: 22px 0 8px; }
     .callout { padding: 4px 18px; }
-    .loom { padding: 40px 18px; }
 
     /* leaderboard reflows from a wide grid into stacked per-provider cards */
     .table-scroll { overflow: visible; margin: 18px 0 8px; }
@@ -183,11 +174,12 @@
   </section>
 
   <section id="walkthrough">
-    <h2><span class="kicker">90-second tour</span>Video walkthrough</h2>
-    <p>Short on time? Watch this for the gist. Everything below is the full writeup.</p>
-    <div class="loom">
-      <p>The 90-second walkthrough will be embedded here once it is recorded.</p>
-    </div>
+    <h2><span class="kicker">3-minute walkthrough</span>Video walkthrough</h2>
+    <p>A 3-minute tour of what I built and what the evaluation found. The rest of the page is the written version.</p>
+    <video class="walkthrough" controls preload="metadata" poster="./walkthrough_poster.jpg">
+      <source src="./walkthrough.mp4" type="video/mp4">
+      Your browser cannot play this video. <a href="./walkthrough.mp4">Download the walkthrough (MP4)</a>.
+    </video>
   </section>
 
   <section id="improvement">
