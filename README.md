@@ -3,6 +3,8 @@ An eval-driven study of how reliably LLM agents extract structured intent from r
 
 **Headline:** eval-driven iteration took the agent from v0 to v1 by cutting the hallucination rate by about 60% (0.057 -> 0.023) and pushing type-classification accuracy to near-perfect (0.958 -> 0.997). Both wins are real, not noise: their 95% bootstrap confidence intervals (1000 resamples, see [ADR-005](./docs/adr/005-bootstrap-confidence-intervals.md)) exclude zero. The same single prompt change also cost a small drop in detection (0.982 -> 0.966), which I report instead of hiding.
 
+**Explore:** a 3-minute video walkthrough and the full interactive results dashboard are live at [memocheck.ranisaro.com](https://memocheck.ranisaro.com).
+
 ## What this is
 
 MemoCheck is two things that only matter together:
